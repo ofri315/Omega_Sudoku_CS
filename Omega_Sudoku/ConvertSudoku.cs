@@ -29,5 +29,23 @@ namespace Omega_Sudoku
             }
             return sudokuMatrix;
         }
+
+        /// <summary>
+        /// הפעולה ממירה את המטריצה חזרה למחרוזת
+        /// </summary>
+        /// <param name="sudokuMatrix">מטריצה המייצגת סודוקו</param>
+        /// <returns>מחרוזת המייצת את הסודוקו</returns>
+        public string ConvertMatrixToString(int[,] sudokuMatrix)
+        {
+            string sudokuExpression = "";
+            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
+                {
+                    sudokuExpression += sudokuMatrix[i, j];
+                }
+            }
+            return sudokuExpression;
+        }
     }
 }
