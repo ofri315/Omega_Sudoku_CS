@@ -27,5 +27,25 @@ namespace Omega_Sudoku
             return false;
         }
 
+
+        /// <summary>
+        /// הפעולה בודקת אם המספר נמצא בטור 
+        /// </summary>
+        /// <param name="mat">מטריצה המייצגת סודוקו</param>
+        /// <param name="colNumber">מספר טור</param>
+        /// <param name="number">מספר לבדיקה אם הוא נמצא בטור</param>
+        /// <returns>אמת אם המספר נמצא בטור, שקר אחרת</returns>
+        public bool NumberInCol(int[,] mat, int colNumber, int number)
+        {
+            for (int i = 0; i < mat.GetLength(0); i++)
+            {
+                if (mat[i,colNumber] == number)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
