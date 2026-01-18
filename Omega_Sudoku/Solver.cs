@@ -47,5 +47,29 @@ namespace Omega_Sudoku
             return false;
         }
 
+
+        /// <summary>
+        /// הפעולה בודקת האם מספר נמצא בבלוק 
+        /// </summary>
+        /// <param name="mat">מטריצה המייצגת סודוקו</param>
+        /// <param name="rowStart">מספר שורה בה מתחיל הבלוק</param>
+        /// <param name="colStart">מספר טור בו מתחיל הבלוק</param>
+        /// <param name="number">מספר לבדיקה אם נמצא בבלוק</param>
+        /// <returns>אמת אם המספר נמצא בבלוק, שקר אחרת</returns>
+        public bool NumberInBlock(int[,] mat, int row, int col,int number)
+        {
+            int block_row = (int)(row / 3) * 3;
+            int block_col = (int)(col / 3) * 3;
+            for (int i = block_row; i < block_row+3; i++)
+            {
+                for (int j = block_col; j < block_col+3; j++)
+                {
+                    if (mat[i,j]==number)
+                        return true;
+                }
+            }
+            return false;
+        }
+
     }
 }
