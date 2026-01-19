@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
-    internal class ConvertToMatrix
+    public class ConvertSudoku
     {
         /// <summary>
         /// הפעולה מקבלת מחרוזת המייצגת את הסודוקו וממירה למערך דו מימדי
