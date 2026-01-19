@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -71,5 +73,28 @@ namespace Omega_Sudoku
             return false;
         }
 
+        public struct Position
+        {
+            public int row;
+            public int col;
+        }
+        public static Position? FindEmptyCell(int[,] mat)
+        {
+
+            for (int i = 0; i < mat.GetLength(0); i++)
+            {
+                for (int j = 0; j < mat.GetLength(1); j++)
+                {
+                    if (mat[i,j]==0)
+                    {
+                        Position pos = new Position();
+                        pos.row = i;
+                        pos.col = j;
+                        return pos;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
