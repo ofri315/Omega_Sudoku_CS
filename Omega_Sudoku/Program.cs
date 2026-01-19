@@ -1,4 +1,5 @@
-﻿using System.Runtime.ExceptionServices;
+﻿using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 
 namespace Omega_Sudoku
@@ -20,11 +21,23 @@ namespace Omega_Sudoku
         {
             ConvertSudoku convertor = new ConvertSudoku();
             
-            int[,] mat = convertor.ConvertStringToMatrix("800000070006010053040600000000080400003000700020005038000000800004050061900002000");
+            int[,] mat = convertor.ConvertStringToMatrix("800000020004010000000700040060090003050000700100020000090000500000030400070000006");
             printMatrix(mat);
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             Solver.SolveSudoku(mat);
+
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+            
             Console.WriteLine();
             printMatrix(mat);
+            Console.WriteLine(elapsedTime.TotalSeconds);
+
+
+
 
         }
     }
