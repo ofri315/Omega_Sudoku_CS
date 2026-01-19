@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Omega_Sudoku
 {
     internal class Solver
@@ -17,7 +16,7 @@ namespace Omega_Sudoku
         /// <param name="rowNumber">מספר שורה</param>
         /// <param name="number">מספר לבדיקה אם נמצא בשורה</param>
         /// <returns>אמת אם המספר נמצא בשורה, ושקר אחרת</returns>
-        public bool NumberInRow(int[,] mat, int rowNumber, int number)
+        public static bool NumberInRow(int[,] mat, int rowNumber, int number)
         {
             for (int i = 0; i < mat.GetLength(1); i++)
             {
@@ -37,7 +36,7 @@ namespace Omega_Sudoku
         /// <param name="colNumber">מספר טור</param>
         /// <param name="number">מספר לבדיקה אם הוא נמצא בטור</param>
         /// <returns>אמת אם המספר נמצא בטור, שקר אחרת</returns>
-        public bool NumberInCol(int[,] mat, int colNumber, int number)
+        public static bool NumberInCol(int[,] mat, int colNumber, int number)
         {
             for (int i = 0; i < mat.GetLength(0); i++)
             {
@@ -58,7 +57,7 @@ namespace Omega_Sudoku
         /// <param name="colStart">מספר טור בו מתחיל הבלוק</param>
         /// <param name="number">מספר לבדיקה אם נמצא בבלוק</param>
         /// <returns>אמת אם המספר נמצא בבלוק, שקר אחרת</returns>
-        public bool NumberInBlock(int[,] mat, int row, int col,int number)
+        public static bool NumberInBlock(int[,] mat, int row, int col,int number)
         {
             int block_row = (int)(row / 3) * 3;
             int block_col = (int)(col / 3) * 3;
@@ -73,11 +72,21 @@ namespace Omega_Sudoku
             return false;
         }
 
+        /// <summary>
+        /// struct המייצג תא בסודוקו
+        /// </summary>
         public struct Position
         {
             public int row;
             public int col;
         }
+
+
+        /// <summary>
+        /// הפעולה מוצאת את התא הראשון הריק במטריצה (ריק=0)
+        /// </summary>
+        /// <param name="mat">מטריצה המייצגת סודוקו</param>
+        /// <returns>מחזירה struct של position המייצגת שורה ועמודה אם קיים תא ריק במטריצה, אחרת מחזירה null</returns>
         public static Position? FindEmptyCell(int[,] mat)
         {
 
@@ -96,5 +105,42 @@ namespace Omega_Sudoku
             }
             return null;
         }
+        
+        /// <summary>
+        /// הפעולה פותרת את הסודוקו
+        /// </summary>
+        /// <param name="mat">מטריצה המייצגת סודוקו</param>
+        /// <returns>אמת אם קיים פתרון תקין לסודוקו, שקר אחרת</returns>
+        public static bool SolveSudoku(int[,] mat)
+        {
+            if (FindEmptyCell(mat)==null) //תנאי עצירה
+            {
+                return true;
+            }
+            Position pos = (Position)FindEmptyCell(mat);
+            int row=pos.row;
+            int col = pos.col;
+            for (int number = 1; number < 10; number++)
+            {
+                if (!NumberInBlock(mat, row, col, number) && !NumberInRow(mat,row, number) && !NumberInCol(mat,col, number))
+                {
+                    mat[row, col] = number;
+                    if (SolveSudoku(mat))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        mat[row, col] = 0; //אם אף אחד מהמספרים 1-9 לא מתאים,
+                                           //זה אומר שיש בעיה באחד המספרים הקודמים שמוקמו
+                    }
+                }
+                
+            }
+            return false;
+
+        }
+ 
+
     }
 }
