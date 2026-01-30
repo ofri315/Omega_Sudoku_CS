@@ -38,12 +38,12 @@ namespace Omega_Sudoku
         /// </summary>
         /// <param name="sudokuMat">sudoku matrix</param>
         /// <returns>True if in any row each digit appears only once, false otherwise.</returns>
-        public bool CheckRows(int[,] sudokuMat, int row)
+        public bool CheckRow(int[,] sudokuMat, int row)
         {
             int[] countDigArr = new int[sudokuMat.GetLength(0)+1];
             for (int i = 0;  i < countDigArr.Length;  i++)
             {
-                countDigArr[j] = 0;
+                countDigArr[i] = 0;
             }
             for (int i = 0; i < sudokuMat.GetLength(1); i++)
             {
@@ -101,6 +101,30 @@ namespace Omega_Sudoku
             {
                 if (countDigArr[i] > 1)
                     return false;
+            }
+            return true;
+        }
+
+
+        public bool CheckRowsColsBlocks(int[,] sudokuMat)
+        {
+            for (int i = 0; i < sudokuMat.GetLength(0); i++)
+            {
+                if (!CheckRow(sudokuMat,i))
+                    return false;
+            }
+            for (int i = 0; i < sudokuMat.GetLength(1); i++)
+            {
+                if (!CheckColumn(sudokuMat, i))
+                    return false;
+            }
+            for (int i = 0; i < sudokuMat.GetLength(0); i++)
+            {
+                for (int j = 0; j < sudokuMat.GetLength(1); j++)
+                {
+                    if (!CheckBlock(sudokuMat,i,j))
+                            return false;
+                }
             }
             return true;
         }
