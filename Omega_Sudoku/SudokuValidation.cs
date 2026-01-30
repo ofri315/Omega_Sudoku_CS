@@ -52,7 +52,6 @@ namespace Omega_Sudoku
                 }
                 for (int j = 1; j < countDigArr.Length; j++)
                 {
-                    Console.WriteLine(j);
                     if (countDigArr[j] >1)
                         return false;
                 }
@@ -61,5 +60,31 @@ namespace Omega_Sudoku
 
         }
 
+        /// <summary>
+        /// The method checks that each column has each number only one time
+        /// </summary>
+        /// <param name="sudokuMat">sudoku matrix</param>
+        /// <returns>True if in any column each digit appears only once, false otherwise.</returns>
+        public bool CheckColumn(int[,] sudokuMat)
+        {
+            for (int i = 0; i < sudokuMat.GetLength(1); i++)
+            {
+                int[] countDigArr = new int[sudokuMat.GetLength(1) + 1];
+                for (int j = 0; j < countDigArr.Length; j++)
+                {
+                    countDigArr[j] = 0;
+                }
+                for (int j = 0; j < sudokuMat.GetLength(0); j++)
+                {
+                    countDigArr[sudokuMat[j,i]]++;
+                }
+                for (int j = 1; j < countDigArr.Length; j++)
+                {
+                    if (countDigArr[j] > 1)
+                        return false;
+                }
+            }
+            return true;
+        }
     }
 }
