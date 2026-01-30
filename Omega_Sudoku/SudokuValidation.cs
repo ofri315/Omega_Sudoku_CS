@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
@@ -37,27 +38,23 @@ namespace Omega_Sudoku
         /// </summary>
         /// <param name="sudokuMat">sudoku matrix</param>
         /// <returns>True if in any row each digit appears only once, false otherwise.</returns>
-        public bool CheckRows(int[,] sudokuMat)
+        public bool CheckRows(int[,] sudokuMat, int row)
         {
-            for (int i = 0; i < sudokuMat.GetLength(0); i++)
+            int[] countDigArr = new int[sudokuMat.GetLength(0)+1];
+            for (int i = 0;  i < countDigArr.Length;  i++)
             {
-                int[] countDigArr = new int[sudokuMat.GetLength(0)+1];
-                for (int j = 0;  j < countDigArr.Length;  j++)
-                {
-                    countDigArr[j] = 0;
-                }
-                for (int j = 0; j < sudokuMat.GetLength(1); j++)
-                {
-                    countDigArr[sudokuMat[i, j]]++;
-                }
-                for (int j = 1; j < countDigArr.Length; j++)
-                {
-                    if (countDigArr[j] >1)
-                        return false;
-                }
+                countDigArr[j] = 0;
+            }
+            for (int i = 0; i < sudokuMat.GetLength(1); i++)
+            {
+                countDigArr[sudokuMat[row, i]]++;
+            }
+            for (int i = 1; i < countDigArr.Length; i++)
+            {
+                if (countDigArr[i] >1)
+                    return false;
             }
             return true;
-
         }
 
         /// <summary>
@@ -65,26 +62,50 @@ namespace Omega_Sudoku
         /// </summary>
         /// <param name="sudokuMat">sudoku matrix</param>
         /// <returns>True if in any column each digit appears only once, false otherwise.</returns>
-        public bool CheckColumn(int[,] sudokuMat)
+        public bool CheckColumn(int[,] sudokuMat, int col)
         {
-            for (int i = 0; i < sudokuMat.GetLength(1); i++)
+            int[] countDigArr = new int[sudokuMat.GetLength(1) + 1];
+            for (int i = 0; i < countDigArr.Length; i++)
             {
-                int[] countDigArr = new int[sudokuMat.GetLength(1) + 1];
-                for (int j = 0; j < countDigArr.Length; j++)
-                {
-                    countDigArr[j] = 0;
-                }
-                for (int j = 0; j < sudokuMat.GetLength(0); j++)
-                {
-                    countDigArr[sudokuMat[j,i]]++;
-                }
-                for (int j = 1; j < countDigArr.Length; j++)
-                {
-                    if (countDigArr[j] > 1)
-                        return false;
-                }
+                countDigArr[i] = 0;
+            }
+            for (int i = 0; i < sudokuMat.GetLength(0); i++)
+            {
+                countDigArr[sudokuMat[i,col]]++;
+            }
+            for (int i = 1; i < countDigArr.Length; i++)
+            {
+                if (countDigArr[i] > 1)
+                    return false;
             }
             return true;
         }
+
+        /// <summary>
+        /// The method checks that each Block has each number only one time
+        /// </summary>
+        /// <param name="sudokuMat">sudoku matrix</param>
+        /// <returns>True if in any Block each digit appears only once, false otherwise.</returns>
+        public bool CheckBlock(int[,] sudokuMat, int row, int col)
+        {
+            int[] countDigArr = new int[sudokuMat.GetLength(1) + 1];
+            for (int i = 0; i < (int)Math.Sqrt(sudokuMat.GetLength(0)); i++)
+            {
+                for (int j = 0; j < (int)Math.Sqrt(sudokuMat.GetLength(1)); j++)
+                {
+                    int curr = sudokuMat[row + i, col + j];
+                    countDigArr[curr]++;
+                }
+            }
+            for (int i = 1; i < countDigArr.Length; i++)
+            {
+                if (countDigArr[i] > 1)
+                    return false;
+            }
+            return true;
+        }
+
+
     }
 }
+
