@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
-    internal class SudokuValidation
+    class SudokuValidation
     {
         private string sudokuExpression;
         public SudokuValidation(string sudokuExpression)
@@ -23,8 +23,13 @@ namespace Omega_Sudoku
             return n - (int)n == 0;
         }
 
-        
-
-
+        /// <summary>
+        /// The method checks whether the sudoku string contains only numbers
+        /// </summary>
+        /// <returns>True if the string contains only numbers, false otherwise</returns>
+        public bool checkOnlyNumbers()
+        {
+            return this.sudokuExpression.All(char.IsDigit);
+        }
     }
 }
