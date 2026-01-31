@@ -13,28 +13,33 @@ namespace Omega_Sudoku
     internal class Solver
     {
         private int[,] mat;
-        private Dictionary<int, HashSet<int>> dictRow=new Dictionary<int, HashSet<int>>();
-        private Dictionary<int, HashSet<int>> dictCol=new Dictionary<int, HashSet<int>>();
-        private Dictionary<(int x, int y), HashSet<int>> dictBlock=new Dictionary<(int x, int y), HashSet<int>>();
+        private Dictionary<int, int[]> dictRow=new Dictionary<int, int[]>();
+        private Dictionary<int, int[]> dictCol=new Dictionary<int, int[]>();
+        private Dictionary<(int x, int y), int[]> dictBlock=new Dictionary<(int x, int y), int[]>();
 
         //Constractor
         public Solver(int[,] mat, int start, int end)
         {
             this.mat = mat;
             int n = mat.GetLength(0);
-            for (int i = 0; i <= n; i++)
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++)
             {
-                dictRow.Add(i, new HashSet<int>());
+                arr[i] = 0;
             }
             for (int i = 0; i <= n; i++)
             {
-                dictCol.Add(i, new HashSet<int>());
+                dictRow.Add(i, new int[n]);
+            }
+            for (int i = 0; i <= n; i++)
+            {
+                dictCol.Add(i, new int[n]);
             }
             for (int i=0;i< (mat.GetLength(0));i+=3)
             {
                 for (int j = 0; j < (mat.GetLength(1)); j+=3)
                 {
-                    dictBlock.Add(((int)(i / 3), (int)(j / 3)),new HashSet<int>());
+                    dictBlock.Add(((int)(i / 3), (int)(j / 3)), new int[n]);
                 }
             }
         }
@@ -50,7 +55,7 @@ namespace Omega_Sudoku
                 {
                     if (mat[i,j]!=0)
                     {
-                        this.dictRow[i].Add(this.mat[i, j]);
+                        this.dictRow[i][mat[i, j] - 1]++;
                     }
                         
                 }
@@ -67,7 +72,7 @@ namespace Omega_Sudoku
                 for (int j = 0; j < mat.GetLength(1); j++)
                 {
                     if (mat[i, j] != 0)
-                        this.dictCol[j].Add(this.mat[i, j]);
+                        this.dictCol[j][mat[i, j] - 1]++;
                 }
             }
         }
@@ -83,7 +88,7 @@ namespace Omega_Sudoku
                 {
                     if (mat[i, j] != 0)
                     {
-                        this.dictBlock[((int)(i / 3), (int)(j / 3))].Add(this.mat[i, j]);
+                        this.dictBlock[((int)(i / 3), (int)(j / 3))][mat[i, j] - 1]++;
                     }
                 }
             }
@@ -98,7 +103,7 @@ namespace Omega_Sudoku
         /// <returns>true if the position is valid, false otherwise</returns>
         public bool IsValidPosition(int number, int row, int col)
         {
-            return !this.dictRow[row].Contains(number) && !this.dictCol[col].Contains(number) && !this.dictBlock[((int)(row / 3) , (int)(col / 3) )].Contains(number);
+            return this.dictRow[row][number-1]==0 && this.dictCol[col][number - 1] == 0 && this.dictBlock[((int)(row / 3) , (int)(col / 3) )][number - 1] == 0;
         }
 
 
@@ -121,18 +126,18 @@ namespace Omega_Sudoku
                 if (IsValidPosition(number, row, col))
                 {
                     this.mat[row, col] = number;
-                    this.dictRow[row].Add(number);
-                    this.dictCol[col].Add(number);
+                    this.dictRow[row][number - 1]=1;
+                    this.dictCol[col][number - 1] = 1;
 
-                    this.dictBlock[((int)(row / 3), (int)(col / 3))].Add(number);
+                    this.dictBlock[((int)(row / 3), (int)(col / 3))][number-1]=1;
 
                     if (SolveSudokuRec(row, col + 1))
                         return true;
 
                     this.mat[row, col] = 0;
-                    this.dictRow[row].Remove(number);
-                    this.dictCol[col].Remove(number);
-                    this.dictBlock[((int)(row / 3), (int)(col / 3))].Remove(number);
+                    this.dictRow[row][number - 1] =0;
+                    this.dictCol[col][number - 1] = 0;
+                    this.dictBlock[((int)(row / 3), (int)(col / 3))][number - 1] = 0;
                 }
             }
             return false;//no solution
