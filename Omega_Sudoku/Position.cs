@@ -16,5 +16,13 @@ namespace Omega_Sudoku
             this.row = row;
             this.column = column;
         }
+        public bool Equals(Position other)
+        {
+            return this.Equals(other as Position);
+        }
+        public string ToString()
+        {
+            return row+"," + column;    
+        }
     }
 }

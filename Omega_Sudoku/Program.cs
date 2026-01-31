@@ -1,13 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
-
 
 namespace Omega_Sudoku
 {
+
     internal class Program
     {
+
         public static void printMatrix(int[,] matrix)
         {
             for (int i = 0; i < matrix.GetLength(0); i++)
@@ -21,26 +22,25 @@ namespace Omega_Sudoku
         }
         static void Main(string[] args)
         {
-            //ConvertSudoku convertor = new ConvertSudoku();
-            
-            //int[,] mat = convertor.ConvertStringToMatrix("800000020004010000000700040060090003050000700100020000090000500000030400070000006");
-            //printMatrix(mat);
+            ConvertSudoku convertor = new ConvertSudoku();
 
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            int[,] mat = convertor.ConvertStringToMatrix("000000010400000000020000000000050407008000300001090000300400200050100000000806000");
+            printMatrix(mat);
+            Solver s = new Solver(mat,0,9);
+            s.InitDictRow();
+            s.InitDictCol();
+            s.InitDictBlock();
 
-            //Solver.SolveSudoku(mat);
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            s.SolveSudokuRec(0, 0);
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
 
-            //stopwatch.Stop();
-            //TimeSpan elapsedTime = stopwatch.Elapsed;
-            
-            //Console.WriteLine();
-            //printMatrix(mat);
-            //Console.WriteLine(elapsedTime.TotalSeconds);
+            Console.WriteLine();
+            printMatrix(mat);
+            Console.WriteLine(elapsedTime.TotalSeconds);
 
-            HashSet<int> set =new HashSet<int> { 1, 2, 3, 4, 5 };
-            Console.WriteLine(set.Contains(4));
-            //Dictionary<int,HashSet<int>> 
 
         }
     }
