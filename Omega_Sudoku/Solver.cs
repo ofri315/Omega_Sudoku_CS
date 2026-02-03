@@ -14,28 +14,31 @@ namespace Omega_Sudoku
     internal class Solver
     {
         private int[,] mat;
-        public Dictionary<int, int> dictRow = new Dictionary<int, int>();
-        public Dictionary<int, int> dictCol = new Dictionary<int, int>();
-        public Dictionary<(int x, int y), int> dictBlock = new Dictionary<(int x, int y), int>();
+        public int[] RowsArr;
+        public int[] ColsArr;
+        public int[] BlockArr;
 
         //Constractor
         public Solver(int[,] mat, int start, int end)
         {
             this.mat = mat;
             int n = mat.GetLength(0);
+            this.RowsArr= new int[n];
+            this.ColsArr= new int[n];
+            this.BlockArr = new int[n];
             for (int i = 0; i < n; i++)
             {
-                dictRow.Add(i, 0);
+                this.RowsArr[i] = 0;
             }
             for (int i = 0; i < n; i++)
             {
-                dictCol.Add(i, 0);
+                this.ColsArr[i] = 0;
             }
             for (int i = 0; i < (mat.GetLength(0)); i += 3)
             {
                 for (int j = 0; j < (mat.GetLength(1)); j += 3)
                 {
-                    dictBlock.Add(((int)(i / 3), (int)(j / 3)), 0);
+                    this.BlockArr[i+((int)(j/3))] = 0;
                 }
             }
         }
@@ -51,7 +54,7 @@ namespace Omega_Sudoku
                 {
                     if (mat[i, j] != 0)
                     {
-                        this.dictRow[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.RowsArr[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
                     }
 
                 }
@@ -68,7 +71,7 @@ namespace Omega_Sudoku
                 for (int j = 0; j < mat.GetLength(1); j++)
                 {
                     if (mat[i, j] != 0)
-                        this.dictCol[j] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.ColsArr[j] |= (int)Math.Pow(2, this.mat[i, j] - 1);
                 }
             }
         }
@@ -84,7 +87,7 @@ namespace Omega_Sudoku
                 {
                     if (mat[i, j] != 0)
                     {
-                        this.dictBlock[((int)(i / 3), (int)(j / 3))] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.BlockArr[(int)(i/3)*3 + ((int)(j / 3))] |= (int)Math.Pow(2, this.mat[i, j] - 1);
                     }
                 }
             }
@@ -99,9 +102,9 @@ namespace Omega_Sudoku
         /// <returns>true if the position is valid, false otherwise</returns>
         public bool IsValidPosition(int number, int row, int col)
         {
-            int numRow = this.dictRow[row];
-            int numCol = this.dictCol[col];
-            int numBlock = this.dictBlock[((int)((row) / 3), (int)((col) / 3))];
+            int numRow = this.RowsArr[row];
+            int numCol = this.ColsArr[col];
+            int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
             return ((numRow & (1<<(number-1))) == 0) && ((numCol & (1 << (number-1))) == 0) && ((numBlock & (1 << (number-1))) == 0);
         }
 
@@ -126,16 +129,16 @@ namespace Omega_Sudoku
                 if (IsValidPosition(number, i, j))
                 {
                     this.mat[i, j] = number;
-                    this.dictRow[i] |= (1 << (number - 1));
-                    this.dictCol[j] |= (1 << (number - 1));
-                    this.dictBlock[((int)(i / 3), (int)(j / 3))] |= (1 << (number - 1));
+                    this.RowsArr[i] |= (1 << (number - 1));
+                    this.ColsArr[j] |= (1 << (number - 1));
+                    this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (1 << (number - 1));
 
                     if (SolveSudokuRec(n, i, j + 1))
                         return true;
                     this.mat[i, j] = 0;
-                    this.dictRow[i] &= ~(1 << (number - 1));
-                    this.dictCol[j] &= ~(1 << (number - 1));
-                    this.dictBlock[((int)(i / 3), (int)(j / 3))] &= ~(1 << (number - 1));
+                    this.RowsArr[i] &= ~(1 << (number - 1));
+                    this.ColsArr[j] &= ~(1 << (number - 1));
+                    this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] &= ~(1 << (number - 1));
                 }
             }
             return false;//no solution
