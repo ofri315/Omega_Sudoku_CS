@@ -46,7 +46,7 @@ namespace Omega_Sudoku
         /// <summary>
         /// The function initializes the dictionary of rows where each row(key in the dictionary) contains all the numbers in the row(without 0).
         /// </summary>
-        public void InitDictRow()
+        public void InitArrRow()
         {
             for (int i = 0; i < mat.GetLength(0); i++)
             {
@@ -64,7 +64,7 @@ namespace Omega_Sudoku
         /// <summary>
         /// The function initializes the dictionary of columns where each column(key in the dictionary) contains all the numbers in the columns(without 0).
         /// </summary>
-        public void InitDictCol()
+        public void InitArrCol()
         {
             for (int i = 0; i < mat.GetLength(0); i++)
             {
@@ -79,7 +79,7 @@ namespace Omega_Sudoku
         /// <summary>
         /// The function initializes the dictionary of blocks where each block(key in the dictionary) contains all the numbers in the block(without 0).
         /// </summary>
-        public void InitDictBlock()
+        public void InitArrBlock()
         {
             for (int i = 0; i < mat.GetLength(0); i++)
             {

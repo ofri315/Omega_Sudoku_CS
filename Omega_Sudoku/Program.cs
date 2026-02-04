@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -32,22 +33,34 @@ namespace Omega_Sudoku
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
                 {
-                    Console.Write(matrix[i,j]+" ");
+                    Console.Write(matrix[i, j] + " ");
                 }
                 Console.WriteLine();
             }
+            
+
+        }
+        public static int[,]? Solve(int[,] sudokuMatrix)
+        {
+            Solver solve = new Solver(sudokuMatrix, 0, sudokuMatrix.GetLength(0));
+            solve.InitArrRow();
+            solve.InitArrCol();
+            solve.InitArrBlock();
+            if (solve.SolveSudokuRec(sudokuMatrix.GetLength(0), 0, 0))
+                return sudokuMatrix;
+            return null;
+
         }
         static void Main(string[] args)
         {
-            //Console.WriteLine(Convert.ToString(2323, 2));
             ConvertSudoku convertor = new ConvertSudoku();
 
             int[,] mat = convertor.ConvertStringToMatrix("800000070006010053040600000000080400003000700020005038000000800004050061900002000");
             printMatrix(mat);
             Solver s = new Solver(mat,0,9);
-            s.InitDictRow();
-            s.InitDictCol();
-            s.InitDictBlock();
+            s.InitArrBlock();
+            s.InitArrCol();
+            s.InitArrRow();
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
