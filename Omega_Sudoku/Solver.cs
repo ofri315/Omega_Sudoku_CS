@@ -15,31 +15,31 @@ namespace Omega_Sudoku
     internal class Solver
     {
         private int[,] mat;
-        public int[] RowsArr;
-        public int[] ColsArr;
-        public int[] BlockArr;
+        public List<int>[] RowsArr;
+        public List<int>[] ColsArr;
+        public List<int>[] BlockArr;
 
         //Constractor
         public Solver(int[,] mat, int start, int end)
         {
             this.mat = mat;
             int n = mat.GetLength(0);
-            this.RowsArr = new int[n];
-            this.ColsArr = new int[n];
-            this.BlockArr = new int[n];
+            this.RowsArr = new List<int>[n];
+            this.ColsArr = new List<int>[n];
+            this.BlockArr = new List<int>[n];
             for (int i = 0; i < n; i++)
             {
-                this.RowsArr[i] = 0;
+                this.RowsArr[i] = new List<int>();
             }
             for (int i = 0; i < n; i++)
             {
-                this.ColsArr[i] = 0;
+                this.ColsArr[i] = new List<int>();
             }
             for (int i = 0; i < (mat.GetLength(0)); i += 3)
             {
                 for (int j = 0; j < (mat.GetLength(1)); j += 3)
                 {
-                    this.BlockArr[i + ((int)(j / 3))] = 0;
+                    this.BlockArr[i + ((int)(j / 3))] = new List<int>();
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace Omega_Sudoku
                 {
                     if (mat[i, j] != 0)
                     {
-                        this.RowsArr[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.RowsArr[i].Add(mat[i, j]);
                     }
 
                 }
@@ -72,7 +72,7 @@ namespace Omega_Sudoku
                 for (int j = 0; j < mat.GetLength(1); j++)
                 {
                     if (mat[i, j] != 0)
-                        this.ColsArr[j] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.ColsArr[j].Add(mat[i, j]);
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace Omega_Sudoku
                 {
                     if (mat[i, j] != 0)
                     {
-                        this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))].Add(mat[i, j]);
                     }
                 }
             }
@@ -104,22 +104,11 @@ namespace Omega_Sudoku
         public Queue<int>? IsValidPosition(int row, int col)
         {
             Queue<int> possibleNumbers = new Queue<int>();
-            int numRow = this.RowsArr[row];
-            int numCol = this.ColsArr[col];
-            int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
-            int total = numRow | numCol | numBlock;
-            string sttotal = Convert.ToString(total, 2);
-            while (sttotal.Length!=9)
+            for (int i = 1; i <= mat.GetLength(0); i++)
             {
-                sttotal = "0" + sttotal;
-            }
-            //Console.WriteLine(sttotal);
-            for (int i = 0; i < sttotal.Length; i++)
-            {
-                if (sttotal[i].Equals('0'))
-                {
-                    possibleNumbers.Enqueue(mat.GetLength(0)-i);
-                }
+                if (!this.RowsArr[row].Contains(i) && !this.ColsArr[col].Contains(i) && !this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))].Contains(i))
+                    { possibleNumbers.Enqueue(i); }
+
             }
             return possibleNumbers;
 
@@ -176,24 +165,62 @@ namespace Omega_Sudoku
 
             Queue<int>? possiblenumbers = IsValidPosition(i, j);
             //printQueue(possiblenumbers);
+            //if (possiblenumbers.Count == 1)
+            //{
+            //    int number = possiblenumbers.Dequeue();
+            //    this.mat[i, j] = number;
+            //    this.RowsArr[i].Add(number);
+            //    this.ColsArr[j].Add(number);
+            //    this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))].Add(number);
+            //    printMatrix(mat);
+            //    Console.WriteLine();
+            //    return SolveSudokuRec(n, i, j + 1);
+            //}
+            //printQueue(possiblenumbers);
+            bool flag = false;
             while (possiblenumbers.Count !=0)
             {
                 int number =possiblenumbers.Dequeue();
                 //Console.WriteLine(i+" "+j+" "+number);
+                //Console.WriteLine(number+":"+i+","+j+" "+flag);
                 this.mat[i, j] = number;
-                this.RowsArr[i] |= (1 << (number - 1));
-                this.ColsArr[j] |= (1 << (number - 1));
-                this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (1 << (number - 1));
+                this.RowsArr[i].Add(number);
+                this.ColsArr[j].Add(number);
+                this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))].Add(number);
 
-                //printMatrix(mat);
+                //printMatrix(mat); Console.WriteLine();
                 if (SolveSudokuRec(n, i, j + 1))
                     return true;
+                //Console.WriteLine(i+" "+j+" "+number);
+                //flag = true;
                 this.mat[i, j] = 0;
-                this.RowsArr[i] &= ~(1 << (number - 1));
-                this.ColsArr[j] &= ~(1 << (number - 1));
-                this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] &= ~(1 << (number - 1));
+                this.RowsArr[i].Remove(number);
+                //Console.WriteLine();
+                this.ColsArr[j].Remove(number);
+                this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))].Remove(number);
+                //updateQueue(possiblenumbers, i, j);
+                
+                //possiblenumbers = IsValidPosition(i, j);
             }
+            //possiblenumbers = IsValidPosition(i, j);
             return false;//no solution
+        }
+        public void updateQueue(Queue<int> q, int i, int j)
+        {
+            int count = q.Count;
+            //Console.WriteLine(count);
+            if (count!=0)
+            {
+                for (int k = 0; k < count; k++)
+                {
+                    int number = q.Dequeue();
+                    if (!(this.RowsArr[i].Contains(number) || this.ColsArr[j].Contains(number) || this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))].Contains(number)))
+                    {
+                        //Console.WriteLine(i + " " + j + " " + number);
+                        q.Enqueue(number);
+                    }
+                }
+            }
         }
         public void printQueue(Queue<int>? q)
         {

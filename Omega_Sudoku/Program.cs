@@ -65,12 +65,12 @@ namespace Omega_Sudoku
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             Console.WriteLine();
-            Console.WriteLine(s.SolveSudokuRec(9,0,0));
+            s.SolveSudokuRec(9,0,0);
             
             stopwatch.Stop();
             TimeSpan elapsedTime = stopwatch.Elapsed;
 
-            //Console.WriteLine();
+            Console.WriteLine();
             printMatrix(mat);
             Console.WriteLine(elapsedTime.TotalSeconds);
 
