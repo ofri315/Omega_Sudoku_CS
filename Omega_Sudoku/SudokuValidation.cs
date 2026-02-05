@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
@@ -21,7 +23,10 @@ namespace Omega_Sudoku
         public bool CheckLength()
         {
             double n=Math.Sqrt(this.sudokuExpression.Length);
-            return n - (int)n == 0;
+            if (n - (int)n == 0)
+                return true;
+            throw new ArgumentException("The length of the Sudoku string is incorrect");
+            
         }
 
         /// <summary>
@@ -30,7 +35,11 @@ namespace Omega_Sudoku
         /// <returns>True if the string contains only numbers, false otherwise</returns>
         public bool CheckOnlyNumbers()
         {
-            return this.sudokuExpression.All(char.IsDigit);
+            if (this.sudokuExpression.All(char.IsDigit))
+            {
+                return true;
+            }
+            throw new ArgumentException("The string contains invalid characters.");
         }
 
         /// <summary>
@@ -51,8 +60,11 @@ namespace Omega_Sudoku
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
-                if (countDigArr[i] >1)
+                if (countDigArr[i] > 1)
                     return false;
+                else
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in row number:{1}", i+1, row));
+
             }
             return true;
         }
@@ -77,6 +89,8 @@ namespace Omega_Sudoku
             {
                 if (countDigArr[i] > 1)
                     return false;
+                else
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in col number:{1}", i + 1, col));
             }
             return true;
         }
@@ -101,6 +115,8 @@ namespace Omega_Sudoku
             {
                 if (countDigArr[i] > 1)
                     return false;
+                else
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in block number:{1}", i + 1, (int)(row / 3) * 3 + ((int)(col / 3))));
             }
             return true;
         }
@@ -108,25 +124,33 @@ namespace Omega_Sudoku
 
         public bool CheckRowsColsBlocks(int[,] sudokuMat)
         {
-            for (int i = 0; i < sudokuMat.GetLength(0); i++)
+            try
             {
-                if (!CheckRow(sudokuMat,i))
-                    return false;
-            }
-            for (int i = 0; i < sudokuMat.GetLength(1); i++)
-            {
-                if (!CheckColumn(sudokuMat, i))
-                    return false;
-            }
-            for (int i = 0; i < sudokuMat.GetLength(0); i++)
-            {
-                for (int j = 0; j < sudokuMat.GetLength(1); j++)
+                for (int i = 0; i < sudokuMat.GetLength(0); i++)
                 {
-                    if (!CheckBlock(sudokuMat,i,j))
-                            return false;
+                    if (!CheckRow(sudokuMat, i))
+                        return false;
                 }
+                for (int i = 0; i < sudokuMat.GetLength(1); i++)
+                {
+                    if (!CheckColumn(sudokuMat, i))
+                        return false;
+                }
+                for (int i = 0; i < sudokuMat.GetLength(0); i++)
+                {
+                    for (int j = 0; j < sudokuMat.GetLength(1); j++)
+                    {
+                        if (!CheckBlock(sudokuMat, i, j))
+                            return false;
+                    }
+                }
+                return true;
             }
-            return true;
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+            
         }
 
 
