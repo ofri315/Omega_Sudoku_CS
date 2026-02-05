@@ -51,7 +51,7 @@ namespace Omega_Sudoku
             for (int i = 0; i < mat.GetLength(0); i++)
             {
                 for (int j = 0; j < mat.GetLength(1); j++)
-                {
+                {  
                     if (mat[i, j] != 0)
                     {
                         this.RowsArr[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
@@ -107,17 +107,6 @@ namespace Omega_Sudoku
             int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
-        public bool onlyoneoption( int row, int col)
-        {
-            int numRow = this.RowsArr[row];
-            int numCol = this.ColsArr[col];
-            int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
-            int numtot = numRow | numCol | numBlock;
-            string st=Convert.ToString(numtot,2);
-            return (st.IndexOf("0")==st.LastIndexOf("0") && st.IndexOf("0")!=-1 && st.Length==9);
-            
-        }
-
 
         /// <summary>
         /// The function solves the sudoku using a recursion
@@ -134,8 +123,6 @@ namespace Omega_Sudoku
                 return SolveSudokuRec(n, i + 1, 0);
             if (this.mat[i, j] != 0)
                 return SolveSudokuRec(n, i, j + 1);
-            if (onlyoneoption(i, j))
-            { }
             for (int number = 1; number < 10; number++)
             {
                 if (IsValidPosition(number, i, j))
@@ -144,7 +131,8 @@ namespace Omega_Sudoku
                     this.RowsArr[i] |= (1 << (number - 1));
                     this.ColsArr[j] |= (1 << (number - 1));
                     this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (1 << (number - 1));
-
+                    printMatrix(this.mat);
+                    Console.WriteLine();
                     if (SolveSudokuRec(n, i, j + 1))
                         return true;
                     this.mat[i, j] = 0;
@@ -165,6 +153,23 @@ namespace Omega_Sudoku
                 }
                 Console.WriteLine();
             }
+        }
+
+        public bool Solve()
+        {
+
+            InitArrRow();
+            InitArrCol();
+            InitArrBlock();
+            if (SolveSudokuRec(mat.GetLength(0), 0, 0))
+                return true;
+            else
+            {
+                throw new Exception("This Sudoku board is unsolvable.");
+            }
+            
+            
+            
         }
     }
 
