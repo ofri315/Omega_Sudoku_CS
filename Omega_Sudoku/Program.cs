@@ -55,18 +55,19 @@ namespace Omega_Sudoku
         {
 
 
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             ConvertSudoku convertor = new ConvertSudoku();
-            int[,] mat = convertor.ConvertStringToMatrix("800000070006010053040600000000080400003000700020005038000000800004050061900002000");
+            int[,] mat = convertor.ConvertStringToMatrix("000000010400000000020000000000050407008000300001090000300400200050100000000806000");
 
             Solver1 s = new Solver1(mat,0,9);
             s.InitArrBlock();
             s.InitArrCol();
             s.InitArrRow();
+            Console.WriteLine(s.CountZeros("101010101"));
 
-
-            Console.WriteLine( s.SolveSudokuRec(9,0,0));
+            Console.WriteLine(s.Solve());
             
             stopwatch.Stop();
             TimeSpan elapsedTime1 = stopwatch.Elapsed;
@@ -74,6 +75,7 @@ namespace Omega_Sudoku
             Console.WriteLine();
             printMatrix(mat);
             Console.WriteLine(elapsedTime1.TotalSeconds);
+
 
 
         }

@@ -107,7 +107,53 @@ namespace Omega_Sudoku
             int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
+        
+        public int CountZeros(string number)
+        {
+            int countZero = 0;
+            for (int bitIndex = 0; bitIndex < number.Length; bitIndex++)
+            {
+                if (number[bitIndex].Equals('0'))
+                {
+                    countZero++;
+                }
+            }
+            return countZero;
+        }
+        public (int,int) FindNext()
+        {
+            int countZeroMin = -1;
+            int rowMin = -1;
+            int colMin = -1;
+            for (int row = 0; row < this.mat.GetLength(0); row++)
+            {
+                for (int col = 0; col < this.mat.GetLength(1); col++)
+                {
+                    if (this.mat[row,col]==0)
+                    {
+                        int numRow = this.RowsArr[row];
+                        int numCol = this.ColsArr[col];
+                        int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
+                        int numtot = numRow | numCol | numBlock;
+                        string binaryNumber = Convert.ToString(numtot, 2);
+                        while (binaryNumber.Length < 9)
+                        {
+                            binaryNumber = "0" + binaryNumber;
+                        }
+                        int countZero = CountZeros(binaryNumber);
+                        if (countZero< countZeroMin || countZeroMin == -1)
+                        {
+                            countZeroMin = countZero;
+                            rowMin = row;
+                            colMin = col;
+                        }
 
+                    }
+                    
+                }
+            }
+            return (rowMin, colMin); 
+        }
         /// <summary>
         /// The function solves the sudoku using a recursion
         /// </summary>
@@ -115,30 +161,29 @@ namespace Omega_Sudoku
         /// <param name="i">row number to start from</param>
         /// <param name="j">col number to start from</param>
         /// <returns>true if the function found a solution, false otherwise</returns>
-        public bool SolveSudokuRec(int n, int i, int j)
+        public bool SolveSudokuRec(int n)
         {
-            if (i == n)
+            (int row, int col) = FindNext();
+            if (row == -1 && col == -1)
                 return true;
-            if (j == n)
-                return SolveSudokuRec(n, i + 1, 0);
-            if (this.mat[i, j] != 0)
-                return SolveSudokuRec(n, i, j + 1);
+            if (col == n)
+                return SolveSudokuRec(n);
+            if (this.mat[row, col] != 0)
+                return SolveSudokuRec(n);
             for (int number = 1; number < 10; number++)
             {
-                if (IsValidPosition(number, i, j))
+                if (IsValidPosition(number, row, col))
                 {
-                    this.mat[i, j] = number;
-                    this.RowsArr[i] |= (1 << (number - 1));
-                    this.ColsArr[j] |= (1 << (number - 1));
-                    this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (1 << (number - 1));
-                    printMatrix(this.mat);
-                    Console.WriteLine();
-                    if (SolveSudokuRec(n, i, j + 1))
+                    this.mat[row, col] = number;
+                    this.RowsArr[row] |= (1 << (number - 1));
+                    this.ColsArr[col] |= (1 << (number - 1));
+                    this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] |= (1 << (number - 1));
+                    if (SolveSudokuRec(n))
                         return true;
-                    this.mat[i, j] = 0;
-                    this.RowsArr[i] &= ~(1 << (number - 1));
-                    this.ColsArr[j] &= ~(1 << (number - 1));
-                    this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] &= ~(1 << (number - 1));
+                    this.mat[row, col] = 0;
+                    this.RowsArr[row] &= ~(1 << (number - 1));
+                    this.ColsArr[col] &= ~(1 << (number - 1));
+                    this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] &= ~(1 << (number - 1));
                 }
             }
             return false;//no solution
@@ -157,19 +202,15 @@ namespace Omega_Sudoku
 
         public bool Solve()
         {
-
             InitArrRow();
             InitArrCol();
             InitArrBlock();
-            if (SolveSudokuRec(mat.GetLength(0), 0, 0))
+            if (SolveSudokuRec(mat.GetLength(0)))
                 return true;
             else
             {
                 throw new Exception("This Sudoku board is unsolvable.");
             }
-            
-            
-            
         }
     }
 
