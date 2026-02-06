@@ -27,11 +27,19 @@ namespace Omega_Sudoku
         {
             while(true)
             {
-                Console.WriteLine("Enter Sudoku Expression:");
-                string sudokuExpression= Console.ReadLine();
-                SudokuManager sudokuManager = new SudokuManager(sudokuExpression);
-                int[,] sudokuMat=sudokuManager.SolveSudoku();
-                printMatrix(sudokuMat);
+                try
+                {
+                    Console.WriteLine("Enter Sudoku Expression:");
+                    string sudokuExpression = Console.ReadLine();
+                    SudokuManager sudokuManager = new SudokuManager(sudokuExpression);
+                    int[,] sudokuMat = sudokuManager.SolveSudoku();
+                    printMatrix(sudokuMat);
+                }
+                catch (Exception error)
+                {
+                    Console.WriteLine(error.Message);
+                }
+
             }
         }
     }
