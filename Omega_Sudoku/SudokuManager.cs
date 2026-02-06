@@ -31,5 +31,19 @@ namespace Omega_Sudoku
                 return null;
             }
         }
+        public string SolveForTests()
+        {
+            try
+            {
+                int[,] sudokuMat=SolveSudoku();
+                ConvertSudoku convertSudoku=new ConvertSudoku();
+                return convertSudoku.ConvertMatrixToString(sudokuMat);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return "";
+            }
+        }
     }
 }
