@@ -11,28 +11,27 @@ namespace Omega_Sudoku
 {
     class SudokuValidation
     {
-        private string sudokuExpression;
-        public SudokuValidation(string sudokuExpression)
+        private int[,] sudokuMatrix;
+        public SudokuValidation(int[,] sudokuMatrix)
         {
-            this.sudokuExpression = sudokuExpression;
+            this.sudokuMatrix = sudokuMatrix;
         }
 
 
         /// <summary>
         /// The method checks that each row has each number only one time
         /// </summary>
-        /// <param name="sudokuMat">sudoku matrix</param>
         /// <returns>True if in any row each digit appears only once, false otherwise.</returns>
-        public bool CheckRow(int[,] sudokuMat, int row)
+        public bool CheckRow(int row)
         {
-            int[] countDigArr = new int[sudokuMat.GetLength(0)+1];
+            int[] countDigArr = new int[sudokuMatrix.GetLength(0)+1];
             for (int i = 0;  i < countDigArr.Length;  i++)
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < sudokuMat.GetLength(1); i++)
+            for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
             {
-                countDigArr[sudokuMat[row, i]]++;
+                countDigArr[sudokuMatrix[row, i]]++;
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
@@ -48,18 +47,17 @@ namespace Omega_Sudoku
         /// <summary>
         /// The method checks that each column has each number only one time
         /// </summary>
-        /// <param name="sudokuMat">sudoku matrix</param>
         /// <returns>True if in any column each digit appears only once, false otherwise.</returns>
-        public bool CheckColumn(int[,] sudokuMat, int col)
+        public bool CheckColumn(int col)
         {
-            int[] countDigArr = new int[sudokuMat.GetLength(1) + 1];
+            int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
             for (int i = 0; i < countDigArr.Length; i++)
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < sudokuMat.GetLength(0); i++)
+            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
             {
-                countDigArr[sudokuMat[i,col]]++;
+                countDigArr[sudokuMatrix[i,col]]++;
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
@@ -76,14 +74,14 @@ namespace Omega_Sudoku
         /// </summary>
         /// <param name="sudokuMat">sudoku matrix</param>
         /// <returns>True if in any Block each digit appears only once, false otherwise.</returns>
-        public bool CheckBlock(int[,] sudokuMat, int row, int col)
+        public bool CheckBlock(int row, int col)
         {
-            int[] countDigArr = new int[sudokuMat.GetLength(1) + 1];
-            for (int i = 0; i < (int)Math.Sqrt(sudokuMat.GetLength(0)); i++)
+            int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
+            for (int i = 0; i < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); i++)
             {
-                for (int j = 0; j < (int)Math.Sqrt(sudokuMat.GetLength(1)); j++)
+                for (int j = 0; j < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); j++)
                 {
-                    int curr = sudokuMat[row + i, col + j];
+                    int curr = sudokuMatrix[row + i, col + j];
                     countDigArr[curr]++;
                 }
             }
@@ -98,25 +96,25 @@ namespace Omega_Sudoku
         }
 
 
-        public bool CheckRowsColsBlocks(int[,] sudokuMat)
+        public bool CheckRowsColsBlocks()
         {
             try
             {
-                for (int i = 0; i < sudokuMat.GetLength(0); i++)
+                for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
                 {
-                    if (!CheckRow(sudokuMat, i))
+                    if (!CheckRow(i))
                         return false;
                 }
-                for (int i = 0; i < sudokuMat.GetLength(1); i++)
+                for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
                 {
-                    if (!CheckColumn(sudokuMat, i))
+                    if (!CheckColumn(i))
                         return false;
                 }
-                for (int i = 0; i < sudokuMat.GetLength(0); i++)
+                for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
                 {
-                    for (int j = 0; j < sudokuMat.GetLength(1); j++)
+                    for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
                     {
-                        if (!CheckBlock(sudokuMat, i, j))
+                        if (!CheckBlock(i, j))
                             return false;
                     }
                 }
