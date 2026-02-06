@@ -18,7 +18,7 @@ namespace Omega_Sudoku
         public int[] ColsArr;
         public int[] BlockArr;
         //Constractor
-        public Solver(int[,] mat, int start, int end)
+        public Solver(int[,] mat)
         {
             this.mat = mat;
             int n = mat.GetLength(0);
