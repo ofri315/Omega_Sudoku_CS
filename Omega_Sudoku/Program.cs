@@ -40,24 +40,6 @@ namespace Omega_Sudoku
             
 
         }
-        public static int[,]? SolveSudoku(string sudokuExpression)
-        {
-            try
-            {
-                SudokuInitialValidation sudokuInitialValidation = new SudokuInitialValidation(sudokuExpression);
-                sudokuInitialValidation.CheckAllInitialValidations();
-                ConvertSudoku convertSudoku = new ConvertSudoku();
-                int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(sudokuExpression);
-                Solver solver = new Solver(SudokuMatrix);
-                solver.Solve();
-                return SudokuMatrix;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error.Message);
-                return null;
-            }
-        }
         static void Main(string[] args)
         {
             Stopwatch stopwatch = new Stopwatch();

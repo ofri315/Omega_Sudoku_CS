@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Omega_Sudoku
+{
+    internal class SudokuManager
+    {
+        private string sudokuExpression;
+        public SudokuManager(string sudokuExpression)
+        {
+            this.sudokuExpression = sudokuExpression;
+        }
+        public int[,]? SolveSudoku()
+        {
+            try
+            {
+                SudokuInitialValidation sudokuInitialValidation = new SudokuInitialValidation(this.sudokuExpression);
+                sudokuInitialValidation.CheckAllInitialValidations();
+                ConvertSudoku convertSudoku = new ConvertSudoku();
+                int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(this.sudokuExpression);
+                Solver solver = new Solver(SudokuMatrix);
+                solver.Solve();
+                return SudokuMatrix;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.Message);
+                return null;
+            }
+        }
+    }
+}
