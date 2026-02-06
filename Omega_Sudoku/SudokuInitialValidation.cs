@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
@@ -61,6 +62,19 @@ namespace Omega_Sudoku
         }
 
 
-        
+        public void CheckAllInitialValidations()
+        {
+            try
+            {
+                this.CheckOnlyNumbers();
+                this.CheckSubMatrixLength();
+                this.CheckExpressionLength();
+                this.CheckSquareLength();
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+        }
     }
 }

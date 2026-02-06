@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
-    internal class Solver1
+    internal class Solver
     {
         private int[,] mat;
         public int[] RowsArr;
         public int[] ColsArr;
         public int[] BlockArr;
         //Constractor
-        public Solver1(int[,] mat, int start, int end)
+        public Solver(int[,] mat, int start, int end)
         {
             this.mat = mat;
             int n = mat.GetLength(0);

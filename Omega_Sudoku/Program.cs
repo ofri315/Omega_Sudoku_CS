@@ -61,7 +61,7 @@ namespace Omega_Sudoku
             ConvertSudoku convertor = new ConvertSudoku();
             int[,] mat = convertor.ConvertStringToMatrix("000000010400000000020000000000050407008000300001090000300400200050100000000806000");
 
-            Solver1 s = new Solver1(mat,0,9);
+            Solver s = new Solver(mat,0,9);
             Console.WriteLine(s.Solve());
             
             stopwatch.Stop();
