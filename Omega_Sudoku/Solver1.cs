@@ -17,7 +17,7 @@ namespace Omega_Sudoku
         public int[] RowsArr;
         public int[] ColsArr;
         public int[] BlockArr;
-
+        public const int countZeroMin = -1;
         //Constractor
         public Solver1(int[,] mat, int start, int end)
         {
@@ -135,24 +135,33 @@ namespace Omega_Sudoku
                         int numCol = this.ColsArr[col];
                         int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
                         int numtot = numRow | numCol | numBlock;
-                        string binaryNumber = Convert.ToString(numtot, 2);
-                        while (binaryNumber.Length < 9)
-                        {
-                            binaryNumber = "0" + binaryNumber;
-                        }
-                        int countZero = CountZeros(binaryNumber);
+                        int countZero = CountZero(numtot);
+                        
                         if (countZero< countZeroMin || countZeroMin == -1)
                         {
                             countZeroMin = countZero;
                             rowMin = row;
                             colMin = col;
                         }
+                        
 
                     }
                     
                 }
             }
             return (rowMin, colMin); 
+        }
+
+
+        public int CountZero(int number)
+        {
+            int count = 0;
+            while(number!=0)
+            {
+                count += number & 1;
+                number>>= 1;
+            }
+            return this.mat.GetLength(0) - count;
         }
         /// <summary>
         /// The function solves the sudoku using a recursion
@@ -166,11 +175,7 @@ namespace Omega_Sudoku
             (int row, int col) = FindNext();
             if (row == -1 && col == -1)
                 return true;
-            if (col == n)
-                return SolveSudokuRec(n);
-            if (this.mat[row, col] != 0)
-                return SolveSudokuRec(n);
-            for (int number = 1; number < 10; number++)
+            for (int number = mat.GetLength(0); number >0 ; number--)
             {
                 if (IsValidPosition(number, row, col))
                 {

@@ -40,17 +40,17 @@ namespace Omega_Sudoku
             
 
         }
-        public static int[,]? Solve(int[,] sudokuMatrix)
-        {
-            Solver solve = new Solver(sudokuMatrix, 0, sudokuMatrix.GetLength(0));
-            solve.InitArrRow();
-            solve.InitArrCol();
-            solve.InitArrBlock();
-            if (solve.SolveSudokuRec(sudokuMatrix.GetLength(0), 0, 0))
-                return sudokuMatrix;
-            return null;
+        //public static int[,]? Solve(int[,] sudokuMatrix)
+        //{
+        //    Solver solve = new Solver(sudokuMatrix, 0, sudokuMatrix.GetLength(0));
+        //    solve.InitArrRow();
+        //    solve.InitArrCol();
+        //    solve.InitArrBlock();
+        //    if (solve.SolveSudokuRec(sudokuMatrix.GetLength(0), 0, 0))
+        //        return sudokuMatrix;
+        //    return null;
 
-        }
+        //}
         static void Main(string[] args)
         {
 
@@ -59,14 +59,9 @@ namespace Omega_Sudoku
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             ConvertSudoku convertor = new ConvertSudoku();
-            int[,] mat = convertor.ConvertStringToMatrix("000000010400000000020000000000050407008000300001090000300400200050100000000806000");
+            int[,] mat = convertor.ConvertStringToMatrix("000060080020000000001000000070000102500030000000000400004201000300700600000000050");
 
             Solver1 s = new Solver1(mat,0,9);
-            s.InitArrBlock();
-            s.InitArrCol();
-            s.InitArrRow();
-            Console.WriteLine(s.CountZeros("101010101"));
-
             Console.WriteLine(s.Solve());
             
             stopwatch.Stop();
