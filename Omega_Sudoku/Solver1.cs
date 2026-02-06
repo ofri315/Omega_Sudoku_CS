@@ -17,7 +17,6 @@ namespace Omega_Sudoku
         public int[] RowsArr;
         public int[] ColsArr;
         public int[] BlockArr;
-        public const int countZeroMin = -1;
         //Constractor
         public Solver1(int[,] mat, int start, int end)
         {
@@ -108,18 +107,7 @@ namespace Omega_Sudoku
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
         
-        public int CountZeros(string number)
-        {
-            int countZero = 0;
-            for (int bitIndex = 0; bitIndex < number.Length; bitIndex++)
-            {
-                if (number[bitIndex].Equals('0'))
-                {
-                    countZero++;
-                }
-            }
-            return countZero;
-        }
+
         public (int,int) FindNext()
         {
             int countZeroMin = -1;
