@@ -1,146 +1,210 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
     internal class Solver
     {
-        /// <summary>
-        /// הפעולה בודקת אם מספר נמצא בשורה 
-        /// </summary>
-        /// <param name="mat">מטריצה המייצגת סודוקו</param>
-        /// <param name="rowNumber">מספר שורה</param>
-        /// <param name="number">מספר לבדיקה אם נמצא בשורה</param>
-        /// <returns>אמת אם המספר נמצא בשורה, ושקר אחרת</returns>
-        public static bool NumberInRow(int[,] mat, int rowNumber, int number)
+        private int[,] mat;
+        public int[] RowsArr;
+        public int[] ColsArr;
+        public int[] BlockArr;
+        //Constractor
+        public Solver(int[,] mat)
         {
-            for (int i = 0; i < mat.GetLength(1); i++)
+            this.mat = mat;
+            int n = mat.GetLength(0);
+            this.RowsArr = new int[n];
+            this.ColsArr = new int[n];
+            this.BlockArr = new int[n];
+            for (int i = 0; i < n; i++)
             {
-                if (mat[rowNumber, i] == number)
+                this.RowsArr[i] = 0;
+            }
+            for (int i = 0; i < n; i++)
+            {
+                this.ColsArr[i] = 0;
+            }
+            for (int i = 0; i < (mat.GetLength(0)); i += 3)
+            {
+                for (int j = 0; j < (mat.GetLength(1)); j += 3)
                 {
-                    return true;
+                    this.BlockArr[i + ((int)(j / 3))] = 0;
                 }
             }
-            return false;
         }
 
-
         /// <summary>
-        /// הפעולה בודקת אם המספר נמצא בטור 
+        /// The function initializes the dictionary of rows where each row(key in the dictionary) contains all the numbers in the row(without 0).
         /// </summary>
-        /// <param name="mat">מטריצה המייצגת סודוקו</param>
-        /// <param name="colNumber">מספר טור</param>
-        /// <param name="number">מספר לבדיקה אם הוא נמצא בטור</param>
-        /// <returns>אמת אם המספר נמצא בטור, שקר אחרת</returns>
-        public static bool NumberInCol(int[,] mat, int colNumber, int number)
+        public void InitArrRow()
         {
             for (int i = 0; i < mat.GetLength(0); i++)
             {
-                if (mat[i,colNumber] == number)
-                {
-                    return true;
+                for (int j = 0; j < mat.GetLength(1); j++)
+                {  
+                    if (mat[i, j] != 0)
+                    {
+                        this.RowsArr[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                    }
+
                 }
             }
-            return false;
-        }
-
-
-        /// <summary>
-        /// הפעולה בודקת האם מספר נמצא בבלוק 
-        /// </summary>
-        /// <param name="mat">מטריצה המייצגת סודוקו</param>
-        /// <param name="rowStart">מספר שורה בה מתחיל הבלוק</param>
-        /// <param name="colStart">מספר טור בו מתחיל הבלוק</param>
-        /// <param name="number">מספר לבדיקה אם נמצא בבלוק</param>
-        /// <returns>אמת אם המספר נמצא בבלוק, שקר אחרת</returns>
-        public static bool NumberInBlock(int[,] mat, int row, int col,int number)
-        {
-            int block_row = (int)(row / 3) * 3;
-            int block_col = (int)(col / 3) * 3;
-            for (int i = block_row; i < block_row+3; i++)
-            {
-                for (int j = block_col; j < block_col+3; j++)
-                {
-                    if (mat[i,j]==number)
-                        return true;
-                }
-            }
-            return false;
         }
 
         /// <summary>
-        /// struct המייצג תא בסודוקו
+        /// The function initializes the dictionary of columns where each column(key in the dictionary) contains all the numbers in the columns(without 0).
         /// </summary>
-        public struct Position
+        public void InitArrCol()
         {
-            public int row;
-            public int col;
-        }
-
-
-        /// <summary>
-        /// הפעולה מוצאת את התא הראשון הריק במטריצה (ריק=0)
-        /// </summary>
-        /// <param name="mat">מטריצה המייצגת סודוקו</param>
-        /// <returns>מחזירה struct של position המייצגת שורה ועמודה אם קיים תא ריק במטריצה, אחרת מחזירה null</returns>
-        public static Position? FindEmptyCell(int[,] mat)
-        {
-
             for (int i = 0; i < mat.GetLength(0); i++)
             {
                 for (int j = 0; j < mat.GetLength(1); j++)
                 {
-                    if (mat[i,j]==0)
+                    if (mat[i, j] != 0)
+                        this.ColsArr[j] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The function initializes the dictionary of blocks where each block(key in the dictionary) contains all the numbers in the block(without 0).
+        /// </summary>
+        public void InitArrBlock()
+        {
+            for (int i = 0; i < mat.GetLength(0); i++)
+            {
+                for (int j = 0; j < mat.GetLength(1); j++)
+                {
+                    if (mat[i, j] != 0)
                     {
-                        Position pos = new Position();
-                        pos.row = i;
-                        pos.col = j;
-                        return pos;
+                        this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (int)Math.Pow(2, this.mat[i, j] - 1);
                     }
                 }
             }
-            return null;
+        }
+
+        /// <summary>
+        /// The function checks if the number can be placed in the given position
+        /// </summary>
+        /// <param name="number">number bettween 1-9</param>
+        /// <param name="row">row number</param>
+        /// <param name="col">col number</param>
+        /// <returns>true if the position is valid, false otherwise</returns>
+        public bool IsValidPosition(int number, int row, int col)
+        {
+            int numRow = this.RowsArr[row];
+            int numCol = this.ColsArr[col];
+            int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
+            return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
         
-        /// <summary>
-        /// הפעולה פותרת את הסודוקו
-        /// </summary>
-        /// <param name="mat">מטריצה המייצגת סודוקו</param>
-        /// <returns>אמת אם קיים פתרון תקין לסודוקו, שקר אחרת</returns>
-        public static bool SolveSudoku(int[,] mat)
+
+        public (int,int) FindNext()
         {
-            if (FindEmptyCell(mat)==null) //תנאי עצירה
+            int countZeroMin = -1;
+            int rowMin = -1;
+            int colMin = -1;
+            for (int row = 0; row < this.mat.GetLength(0); row++)
             {
-                return true;
-            }
-            Position pos = (Position)FindEmptyCell(mat);
-            int row=pos.row;
-            int col = pos.col;
-            for (int number = 1; number < 10; number++)
-            {
-                if (!NumberInBlock(mat, row, col, number) && !NumberInRow(mat,row, number) && !NumberInCol(mat,col, number))
+                for (int col = 0; col < this.mat.GetLength(1); col++)
                 {
-                    mat[row, col] = number;
-                    if (SolveSudoku(mat))
+                    if (this.mat[row,col]==0)
                     {
-                        return true;
+                        int numRow = this.RowsArr[row];
+                        int numCol = this.ColsArr[col];
+                        int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
+                        int numtot = numRow | numCol | numBlock;
+                        int countZero = CountZero(numtot);
+                        
+                        if (countZero< countZeroMin || countZeroMin == -1)
+                        {
+                            countZeroMin = countZero;
+                            rowMin = row;
+                            colMin = col;
+                        }
+                        
+
                     }
-                    else
-                    {
-                        mat[row, col] = 0; //אם אף אחד מהמספרים 1-9 לא מתאים,
-                                           //זה אומר שיש בעיה באחד המספרים הקודמים שמוקמו
-                    }
+                    
                 }
-                
             }
-            return false;
-
+            return (rowMin, colMin); 
         }
- 
 
+
+        public int CountZero(int number)
+        {
+            int count = 0;
+            while(number!=0)
+            {
+                count += number & 1;
+                number>>= 1;
+            }
+            return this.mat.GetLength(0) - count;
+        }
+        /// <summary>
+        /// The function solves the sudoku using a recursion
+        /// </summary>
+        /// <param name="n">size of each row, col, and block</param>
+        /// <param name="i">row number to start from</param>
+        /// <param name="j">col number to start from</param>
+        /// <returns>true if the function found a solution, false otherwise</returns>
+        public bool SolveSudokuRec(int n)
+        {
+            (int row, int col) = FindNext();
+            if (row == -1 && col == -1)
+                return true;
+            for (int number = mat.GetLength(0); number >0 ; number--)
+            {
+                if (IsValidPosition(number, row, col))
+                {
+                    this.mat[row, col] = number;
+                    this.RowsArr[row] |= (1 << (number - 1));
+                    this.ColsArr[col] |= (1 << (number - 1));
+                    this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] |= (1 << (number - 1));
+                    if (SolveSudokuRec(n))
+                        return true;
+                    this.mat[row, col] = 0;
+                    this.RowsArr[row] &= ~(1 << (number - 1));
+                    this.ColsArr[col] &= ~(1 << (number - 1));
+                    this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] &= ~(1 << (number - 1));
+                }
+            }
+            return false;//no solution
+        }
+        public void printMatrix(int[,] matrix)
+        {
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    Console.Write(matrix[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public bool Solve()
+        {
+            InitArrRow();
+            InitArrCol();
+            InitArrBlock();
+            if (SolveSudokuRec(mat.GetLength(0)))
+                return true;
+            else
+            {
+                throw new Exception("This Sudoku board is unsolvable.");
+            }
+        }
     }
+
 }
