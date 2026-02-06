@@ -59,7 +59,7 @@ namespace Omega_Sudoku
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             ConvertSudoku convertor = new ConvertSudoku();
-            int[,] mat = convertor.ConvertStringToMatrix("000060080020000000001000000070000102500030000000000400004201000300700600000000050");
+            int[,] mat = convertor.ConvertStringToMatrix("000000010400000000020000000000050407008000300001090000300400200050100000000806000");
 
             Solver1 s = new Solver1(mat,0,9);
             Console.WriteLine(s.Solve());
