@@ -7,7 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
-    internal class SudokuInitialValidation
+    public class SudokuInitialValidation
     {
         private string sudokuExpression;
         public SudokuInitialValidation(string sudokuExpression)

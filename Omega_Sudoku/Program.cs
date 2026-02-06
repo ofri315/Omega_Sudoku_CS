@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace Omega_Sudoku
 {
 
-    internal class Program
+    public class Program
     {
         public static void printMatrix(int[,] matrix)
         {

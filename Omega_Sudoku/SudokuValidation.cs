@@ -9,7 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
-    class SudokuValidation
+    public class SudokuValidation
     {
         private int[,] sudokuMatrix;
         public SudokuValidation(int[,] sudokuMatrix)

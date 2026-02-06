@@ -1,3 +1,4 @@
+using Omega_Sudoku;
 namespace Omega_Sudoku.Tests
 {
     public class UnitTest1
@@ -5,7 +6,7 @@ namespace Omega_Sudoku.Tests
         
         public void Test1()
         {
-
+            
         }
     }
 }

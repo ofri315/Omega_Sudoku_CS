@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
-    internal class Solver
+    public class Solver
     {
         private int[,] mat;
         public int[] RowsArr;

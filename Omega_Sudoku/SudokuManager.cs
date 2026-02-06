@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
-    internal class SudokuManager
+    public class SudokuManager
     {
         private string sudokuExpression;
         public SudokuManager(string sudokuExpression)
