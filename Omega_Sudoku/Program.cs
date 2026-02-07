@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace Omega_Sudoku
 {
-
+    
     public class Program
     {
-        static void Main(string[] args)
+        public static void RunSudokuSolver()
         {
-            while(true)
+            while (true)
             {
                 try
                 {
@@ -34,6 +34,10 @@ namespace Omega_Sudoku
                 }
 
             }
+        }
+        static void Main(string[] args)
+        {
+            RunSudokuSolver();
         }
     }
 }
