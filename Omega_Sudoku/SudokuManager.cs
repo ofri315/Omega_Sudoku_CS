@@ -19,12 +19,16 @@ namespace Omega_Sudoku
             {
                 SudokuInitialValidation sudokuInitialValidation = new SudokuInitialValidation(this.sudokuExpression);
                 sudokuInitialValidation.CheckAllInitialValidations();
+
                 ConvertSudoku convertSudoku = new ConvertSudoku();
                 int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(this.sudokuExpression);
-                SudokuValidation sudokuValidation=new SudokuValidation(SudokuMatrix);
+
+                SudokuValidation sudokuValidation = new SudokuValidation(SudokuMatrix);
                 sudokuValidation.CheckRowsColsBlocks();
+
                 ISolver solver = new Solver(SudokuMatrix);
                 solver.Solve();
+
                 return SudokuMatrix;
             }
             catch (Exception error)
@@ -32,6 +36,7 @@ namespace Omega_Sudoku
                 throw new Exception(error.Message);
             }
         }
+        
         public string SolveForTests()
         {
             try

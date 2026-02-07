@@ -17,9 +17,16 @@ namespace Omega_Sudoku
                 {
                     Console.WriteLine("Enter Sudoku Expression:");
                     string sudokuExpression = Console.ReadLine();
+
+                    int[,] MatrixBefore = new ConvertSudoku().ConvertStringToMatrix(sudokuExpression);
+                    Console.WriteLine("Sudoku Before Solution:");
+                    PrintSudoku.PrintSudokuMatrix(MatrixBefore);
+
                     SudokuManager sudokuManager = new SudokuManager(sudokuExpression);
-                    int[,] sudokuMat = sudokuManager.SolveSudoku();
-                    PrintSudoku.PrintSudokuMatrix(sudokuMat);
+                    int[,] MatrixAfter = sudokuManager.SolveSudoku();
+
+                    Console.WriteLine("Solved Sudoku:");
+                    PrintSudoku.PrintSudokuMatrix(MatrixAfter);
                 }
                 catch (Exception error)
                 {
