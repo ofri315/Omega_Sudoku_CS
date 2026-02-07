@@ -66,8 +66,47 @@ namespace Omega_Sudoku.Tests
         }
 
 
+        [Fact]
+        public void TestWithValidSudoku7()
+        {
+            SudokuManager sudokuManager = new SudokuManager("000000014000708000000000000104005000000200830600000000500040000030000700000090001");
+            string solvedExpression = sudokuManager.SolveForTests();
+            string expected = "857926314341758692962431578184365927795214836623879145519647283436182759278593461";
+            Assert.Equal(solvedExpression, expected);
 
-       
+        }
+
+
+        [Fact]
+        public void TestWithValidSudoku8()
+        {
+            SudokuManager sudokuManager = new SudokuManager("900000052300004000000010000010000040080200000000000300000790008400000200000500000");
+            string solvedExpression = sudokuManager.SolveForTests();
+            string expected = "948376152351924687762815934213657849684239571579481326125793468437168295896542713";
+            Assert.Equal(solvedExpression, expected);
+
+        }
+
+
+        [Fact]
+        public void TestWithValidSudoku9()
+        {
+            SudokuManager sudokuManager = new SudokuManager("000000230700010000000000050002500000030000700000090000600207000800000001000300400");
+            string solvedExpression = sudokuManager.SolveForTests();
+            string expected = "461875239725913864398426157972534618534168792186792543613247985847659321259381476";
+            Assert.Equal(solvedExpression, expected);
+
+        }
+
+        [Fact]
+        public void TestWithValidSudoku10()
+        {
+            SudokuManager sudokuManager = new SudokuManager("000000012000035000000600070700000300000400800100000000000120000080000040050000600");
+            string solvedExpression = sudokuManager.SolveForTests();
+            string expected = "673894512912735486845612973798261354526473891134589267469128735287356149351947628";
+            Assert.Equal(solvedExpression, expected);
+
+        }
 
 
     }
