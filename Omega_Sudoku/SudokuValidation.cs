@@ -99,7 +99,7 @@ namespace Omega_Sudoku
         }
 
 
-        public bool CheckRowsColsBlocks()
+        public void CheckRowsColsBlocks()
         {
             try
             {
@@ -118,7 +118,6 @@ namespace Omega_Sudoku
                         CheckBlock(i, j);
                     }
                 }
-                return true;
             }
             catch (Exception error)
             {

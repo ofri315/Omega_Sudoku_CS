@@ -10,6 +10,6 @@ namespace Omega_Sudoku
     {
         int[,] SudokuMatrix { get; }
 
-        void SudokuValidation();
+        void CheckRowsColsBlocks();
     }
 }
