@@ -14,6 +14,13 @@ namespace Omega_Sudoku
         {
             this.sudokuExpression = sudokuExpression;   
         }
+        public bool CheckEmptyString()
+        {
+            if (this.sudokuExpression == "")
+                throw new ArgumentException("The Sudoku String is empty");
+            else
+                return true;
+        }
         
         /// <summary>
         /// The function checks whether the length of the string is a square number.
@@ -66,6 +73,7 @@ namespace Omega_Sudoku
         {
             try
             {
+                this.CheckEmptyString();
                 this.CheckExpressionLength();
                 this.CheckSquareLength();
                 this.CheckOnlyNumbers();

@@ -13,7 +13,7 @@ namespace Omega_Sudoku
         {
             this.sudokuExpression = sudokuExpression;
         }
-        public int[,]? SolveSudoku()
+        public int[,] SolveSudoku()
         {
             try
             {

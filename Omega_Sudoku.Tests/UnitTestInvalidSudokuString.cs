@@ -4,6 +4,15 @@ namespace Omega_Sudoku.Tests
     public class UnitTestInvalidSudokuString
     {
         [Fact]
+        public void TestWithEmptyString()
+        {
+            SudokuManager sudokuManager = new SudokuManager("");
+            var exception = Assert.Throws<Exception>(() => sudokuManager.SolveForTests());
+            string expected = "The Sudoku String is empty";
+            Assert.Equal(exception.Message, expected);
+        }
+
+        [Fact]
         public void TestWithInvalidCharacters()
         {
             SudokuManager sudokuManager = new SudokuManager("07000a0430400096108*0634900094052000358460020000800530080070091902100005007040802");
