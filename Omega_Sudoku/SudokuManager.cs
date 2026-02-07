@@ -27,8 +27,7 @@ namespace Omega_Sudoku
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
-                return null;
+                throw new Exception(error.Message);
             }
         }
         public string SolveForTests()
@@ -41,8 +40,7 @@ namespace Omega_Sudoku
             }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
-                return "";
+                throw new Exception(error.Message);
             }
         }
     }

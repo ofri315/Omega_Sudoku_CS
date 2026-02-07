@@ -37,7 +37,7 @@ namespace Omega_Sudoku
         {
             if (this.sudokuExpression.Length<=81)
                 return true;
-            throw new ArgumentException("The length is bigger then 81");
+            throw new ArgumentException("The length of the string is bigger then 81.");
         }
 
         public bool CheckSubMatrixLength()
@@ -46,7 +46,7 @@ namespace Omega_Sudoku
             double subMatrixLength= Math.Sqrt(rowColBlockLength);
             if (subMatrixLength - (int)subMatrixLength == 0)
                 return true;
-            throw new ArgumentException("The length of the sub matrices sides is not equal (NxN)");
+            throw new ArgumentException("The length of the sub matrices sides is not equal (NxN).");
         }
         /// <summary>
         /// The method checks whether the sudoku string contains only numbers
@@ -66,14 +66,14 @@ namespace Omega_Sudoku
         {
             try
             {
-                this.CheckOnlyNumbers();
-                this.CheckSubMatrixLength();
                 this.CheckExpressionLength();
                 this.CheckSquareLength();
+                this.CheckOnlyNumbers();
+                this.CheckSubMatrixLength();
             }
-            catch (Exception error)
+            catch (ArgumentException error)
             {
-                throw new Exception(error.Message);
+                throw new ArgumentException(error.Message);
             }
         }
     }
