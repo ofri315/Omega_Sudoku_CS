@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
-    public class SudokuInitialValidation
+    public class SudokuInitialValidation : IInitialValidation
     {
         private string sudokuExpression;
+        public string SudokuExpression;
+        string IInitialValidation.SudokuExspression
+        {
+            get => sudokuExpression;
+        }
+
         public SudokuInitialValidation(string sudokuExpression)
         {
             this.sudokuExpression = sudokuExpression;   
