@@ -21,6 +21,8 @@ namespace Omega_Sudoku
                 sudokuInitialValidation.CheckAllInitialValidations();
                 ConvertSudoku convertSudoku = new ConvertSudoku();
                 int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(this.sudokuExpression);
+                SudokuValidation sudokuValidation=new SudokuValidation(SudokuMatrix);
+                sudokuValidation.CheckRowsColsBlocks();
                 Solver solver = new Solver(SudokuMatrix);
                 solver.Solve();
                 return SudokuMatrix;

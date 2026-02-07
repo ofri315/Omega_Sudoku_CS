@@ -36,9 +36,7 @@ namespace Omega_Sudoku
             for (int i = 1; i < countDigArr.Length; i++)
             {
                 if (countDigArr[i] > 1)
-                    return false;
-                else
-                    throw new ArgumentException(string.Format("The number {0} appears more then once in row number:{1}", i+1, row));
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in row number:{1}", i, row));
 
             }
             return true;
@@ -62,9 +60,7 @@ namespace Omega_Sudoku
             for (int i = 1; i < countDigArr.Length; i++)
             {
                 if (countDigArr[i] > 1)
-                    return false;
-                else
-                    throw new ArgumentException(string.Format("The number {0} appears more then once in col number:{1}", i + 1, col));
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in col number:{1}", i, col));
             }
             return true;
         }
@@ -77,6 +73,10 @@ namespace Omega_Sudoku
         public bool CheckBlock(int row, int col)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
+            for (int i = 0; i < countDigArr.Length; i++)
+            {
+                countDigArr[i] = 0;
+            }
             for (int i = 0; i < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); i++)
             {
                 for (int j = 0; j < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); j++)
@@ -88,9 +88,7 @@ namespace Omega_Sudoku
             for (int i = 1; i < countDigArr.Length; i++)
             {
                 if (countDigArr[i] > 1)
-                    return false;
-                else
-                    throw new ArgumentException(string.Format("The number {0} appears more then once in block number:{1}", i + 1, (int)(row / 3) * 3 + ((int)(col / 3))));
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in block number:{1}", i, (int)(row / 3) * 3 + ((int)(col / 3))));
             }
             return true;
         }
@@ -102,20 +100,17 @@ namespace Omega_Sudoku
             {
                 for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
                 {
-                    if (!CheckRow(i))
-                        return false;
+                    CheckRow(i);
                 }
                 for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
                 {
-                    if (!CheckColumn(i))
-                        return false;
+                    CheckColumn(i);
                 }
-                for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+                for (int i = 0; i < sudokuMatrix.GetLength(0); i+=3)
                 {
-                    for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
+                    for (int j = 0; j < sudokuMatrix.GetLength(1); j+=3)
                     {
-                        if (!CheckBlock(i, j))
-                            return false;
+                        CheckBlock(i, j);
                     }
                 }
                 return true;
