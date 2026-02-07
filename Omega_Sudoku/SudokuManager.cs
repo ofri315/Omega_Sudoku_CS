@@ -17,14 +17,14 @@ namespace Omega_Sudoku
         {
             try
             {
-                SudokuInitialValidation sudokuInitialValidation = new SudokuInitialValidation(this.sudokuExpression);
-                sudokuInitialValidation.CheckAllInitialValidations();
+                SudokuInitialValidation InitialValidation = new SudokuInitialValidation(this.sudokuExpression);
+                InitialValidation.CheckAllInitialValidations();
 
-                ConvertSudoku convertSudoku = new ConvertSudoku();
-                int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(this.sudokuExpression);
+                ConvertSudoku convertor = new ConvertSudoku();
+                int[,] SudokuMatrix = convertor.ConvertStringToMatrix(this.sudokuExpression);
 
-                SudokuValidation sudokuValidation = new SudokuValidation(SudokuMatrix);
-                sudokuValidation.CheckRowsColsBlocks();
+                SudokuValidation Validation = new SudokuValidation(SudokuMatrix);
+                Validation.CheckRowsColsBlocks();
 
                 ISolver solver = new Solver(SudokuMatrix);
                 solver.Solve();
@@ -42,8 +42,8 @@ namespace Omega_Sudoku
             try
             {
                 int[,] sudokuMat=SolveSudoku();
-                ConvertSudoku convertSudoku=new ConvertSudoku();
-                return convertSudoku.ConvertMatrixToString(sudokuMat);
+                ConvertSudoku convertor=new ConvertSudoku();
+                return convertor.ConvertMatrixToString(sudokuMat);
             }
             catch (Exception error)
             {

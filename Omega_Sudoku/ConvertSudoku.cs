@@ -16,15 +16,15 @@ namespace Omega_Sudoku
         /// <returns>מערך דו מימדי המייצג את הסודוקו טרם פתירתו</returns>
         public int[,] ConvertStringToMatrix(string sudokuExpression)
         {
-            int n = (int)Math.Sqrt(sudokuExpression.Length);
-            int[,] sudokuMatrix = new int[n,n];
-            int k = 0;
-            for (int i = 0; i <n; i++)
+            int rowColBlockLength = (int)Math.Sqrt(sudokuExpression.Length);
+            int[,] sudokuMatrix = new int[rowColBlockLength, rowColBlockLength];
+            int stringIndex = 0;
+            for (int row = 0; row < rowColBlockLength; row++)
             {
-                for (int j = 0; j < n; j++)
+                for (int col = 0; col < rowColBlockLength; col++)
                 {
-                    sudokuMatrix[i,j] = (int)sudokuExpression[k]-'0';
-                    k++;
+                    sudokuMatrix[row,col] = (int)sudokuExpression[stringIndex] -'0';
+                    stringIndex++;
                 }
             }
             return sudokuMatrix;
@@ -38,11 +38,11 @@ namespace Omega_Sudoku
         public string ConvertMatrixToString(int[,] sudokuMatrix)
         {
             string sudokuExpression = "";
-            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+            for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
             {
-                for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
+                for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
                 {
-                    sudokuExpression += sudokuMatrix[i, j];
+                    sudokuExpression += sudokuMatrix[row, col];
                 }
             }
             return sudokuExpression;

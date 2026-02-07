@@ -36,8 +36,8 @@ namespace Omega_Sudoku
         /// <exception cref="ArgumentException">if the length of the string is not a square number, the function throws ArgumentException</exception>
         public bool CheckSquareLength()
         {
-            double n = Math.Sqrt(this.sudokuExpression.Length);
-            if (n - (int)n == 0)
+            double rowColBlockLength = Math.Sqrt(this.sudokuExpression.Length);
+            if (rowColBlockLength - (int)rowColBlockLength == 0)
                 return true;
             throw new ArgumentException("The length of the Sudoku string is not a square root.");
         }

@@ -34,9 +34,9 @@ namespace Omega_Sudoku
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
+            for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
             {
-                countDigArr[sudokuMatrix[row, i]]++;
+                countDigArr[sudokuMatrix[row, col]]++;
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
@@ -58,9 +58,9 @@ namespace Omega_Sudoku
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+            for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
             {
-                countDigArr[sudokuMatrix[i,col]]++;
+                countDigArr[sudokuMatrix[row,col]]++;
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
@@ -82,11 +82,11 @@ namespace Omega_Sudoku
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); i++)
+            for (int rowIndex = 0; rowIndex < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); rowIndex++)
             {
-                for (int j = 0; j < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); j++)
+                for (int colIndex = 0; colIndex < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); colIndex++)
                 {
-                    int curr = sudokuMatrix[row + i, col + j];
+                    int curr = sudokuMatrix[row + rowIndex, col + colIndex];
                     countDigArr[curr]++;
                 }
             }
@@ -103,19 +103,19 @@ namespace Omega_Sudoku
         {
             try
             {
-                for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+                for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
                 {
-                    CheckRow(i);
+                    CheckRow(row);
                 }
-                for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
+                for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
                 {
-                    CheckColumn(i);
+                    CheckColumn(col);
                 }
-                for (int i = 0; i < sudokuMatrix.GetLength(0); i+=(int)Math.Sqrt(sudokuMatrix.GetLength(0)))
+                for (int row = 0; row < sudokuMatrix.GetLength(0); row+=(int)Math.Sqrt(sudokuMatrix.GetLength(0)))
                 {
-                    for (int j = 0; j < sudokuMatrix.GetLength(1); j+= (int)Math.Sqrt(sudokuMatrix.GetLength(1)))
+                    for (int col = 0; col < sudokuMatrix.GetLength(1); col+= (int)Math.Sqrt(sudokuMatrix.GetLength(1)))
                     {
-                        CheckBlock(i, j);
+                        CheckBlock(row, col);
                     }
                 }
             }

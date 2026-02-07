@@ -10,17 +10,17 @@ namespace Omega_Sudoku
     {
         public static void PrintSudokuMatrix(int[,] matrix)
         {
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            for (int row = 0; row < matrix.GetLength(0);row++)
             {
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                for (int col = 0; col < matrix.GetLength(1); col++)
                 {
-                    if ((j+1)%(int)Math.Sqrt(matrix.GetLength(0))==0 && (j+1)<matrix.GetLength(0))
-                        Console.Write(matrix[i, j] + "|");
+                    if ((col+1)%(int)Math.Sqrt(matrix.GetLength(0))==0 && (col+1)<matrix.GetLength(0))
+                        Console.Write(matrix[row, col] + "|");
                     else
-                        Console.Write(matrix[i, j] + " ");
+                        Console.Write(matrix[row, col] + " ");
                 }
                 Console.WriteLine();
-                if ((i + 1) % (int)Math.Sqrt(matrix.GetLength(0)) == 0 && (i+1)<matrix.GetLength(0))
+                if ((row + 1) % (int)Math.Sqrt(matrix.GetLength(0)) == 0 && (row+1)<matrix.GetLength(0))
                     Console.WriteLine(string.Concat(Enumerable.Repeat("-", matrix.GetLength(0)*2)));
             }
             Console.WriteLine();

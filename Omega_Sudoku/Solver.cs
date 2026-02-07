@@ -15,9 +15,9 @@ namespace Omega_Sudoku
     {
         private int[,] sudokuMatrix;
         public int[,] SudokuMatrix;
-        private int[] RowsArr;
-        private int[] ColsArr;
-        private int[] BlockArr;
+        private int[] rowsArr;
+        private int[] colsArr;
+        private int[] blockArr;
 
         private int rowColBlocksize;
         private int subMatrixSideLength;
@@ -32,41 +32,43 @@ namespace Omega_Sudoku
         public Solver(int[,] mat)
         {
             this.sudokuMatrix = mat;
+
             this.rowColBlocksize = mat.GetLength(0);
             this.subMatrixSideLength = (int)Math.Sqrt(rowColBlocksize);
-            this.RowsArr = new int[this.rowColBlocksize];
-            this.ColsArr = new int[this.rowColBlocksize];
-            this.BlockArr = new int[this.rowColBlocksize];
 
-            for (int i = 0; i < this.rowColBlocksize; i++)
+            this.rowsArr = new int[this.rowColBlocksize];
+            this.colsArr = new int[this.rowColBlocksize];
+            this.blockArr = new int[this.rowColBlocksize];
+
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                this.RowsArr[i] = 0;
+                this.rowsArr[row] = 0;
             }
-            for (int i = 0; i < this.rowColBlocksize; i++)
+            for (int col = 0; col < this.rowColBlocksize; col++)
             {
-                this.ColsArr[i] = 0;
+                this.colsArr[col] = 0;
             }
-            for (int i = 0; i < (mat.GetLength(0)); i += this.subMatrixSideLength)
+            for (int row = 0; row < this.rowColBlocksize; row += this.subMatrixSideLength)
             {
-                for (int j = 0; j < (mat.GetLength(1)); j += this.subMatrixSideLength)
+                for (int col = 0; col < this.rowColBlocksize; col += this.subMatrixSideLength)
                 {
-                    this.BlockArr[i + ((int)(j / subMatrixSideLength))] = 0;
+                    this.blockArr[row + ((int)(col / subMatrixSideLength))] = 0;
                 }
             }
         }
 
         /// <summary>
-        /// The function initializes the dictionary of rows where each row(key in the dictionary) contains all the numbers in the row(without 0).
+        /// The function initializes the arr of rows where each row(index in the arr) represented by a binary number.
         /// </summary>
         public void InitArrRow()
         {
-            for (int i = 0; i < this.rowColBlocksize; i++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int j = 0; j < this.rowColBlocksize; j++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {  
-                    if (sudokuMatrix[i, j] != 0)
+                    if (sudokuMatrix[row, col] != 0)
                     {
-                        this.RowsArr[i] |= (int)Math.Pow(2, this.sudokuMatrix[i, j] - 1);
+                        this.rowsArr[row] |= (int)Math.Pow(2, this.sudokuMatrix[row, col] - 1);
                     }
 
                 }
@@ -78,12 +80,12 @@ namespace Omega_Sudoku
         /// </summary>
         public void InitArrCol()
         {
-            for (int i = 0; i < this.rowColBlocksize; i++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int j = 0; j < this.rowColBlocksize; j++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {
-                    if (sudokuMatrix[i, j] != 0)
-                        this.ColsArr[j] |= (int)Math.Pow(2, this.sudokuMatrix[i, j] - 1);
+                    if (sudokuMatrix[row, col] != 0)
+                        this.colsArr[col] |= (int)Math.Pow(2, this.sudokuMatrix[row, col] - 1);
                 }
             }
         }
@@ -93,13 +95,13 @@ namespace Omega_Sudoku
         /// </summary>
         public void InitArrBlock()
         {
-            for (int i = 0; i < this.rowColBlocksize; i++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int j = 0; j < this.rowColBlocksize; j++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {
-                    if (sudokuMatrix[i, j] != 0)
+                    if (sudokuMatrix[row, col] != 0)
                     {
-                        this.BlockArr[(int)(i / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(j / this.subMatrixSideLength))] |= (int)Math.Pow(2, this.sudokuMatrix[i, j] - 1);
+                        this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] |= (int)Math.Pow(2, this.sudokuMatrix[row, col] - 1);
                     }
                 }
             }
@@ -114,9 +116,9 @@ namespace Omega_Sudoku
         /// <returns>true if the position is valid, false otherwise</returns>
         public bool IsValidPosition(int number, int row, int col)
         {
-            int numRow = this.RowsArr[row];
-            int numCol = this.ColsArr[col];
-            int numBlock = this.BlockArr[(int)(row / this.subMatrixSideLength) * 3 + ((int)(col / this.subMatrixSideLength))];
+            int numRow = this.rowsArr[row];
+            int numCol = this.colsArr[col];
+            int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * 3 + ((int)(col / this.subMatrixSideLength))];
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
         
@@ -132,11 +134,11 @@ namespace Omega_Sudoku
                 {
                     if (this.sudokuMatrix[row,col]==0)
                     {
-                        int numRow = this.RowsArr[row];
-                        int numCol = this.ColsArr[col];
-                        int numBlock = this.BlockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
-                        int numtot = numRow | numCol | numBlock;
-                        int countZero = CountZero(numtot);
+                        int numRow = this.rowsArr[row];
+                        int numCol = this.colsArr[col];
+                        int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
+                        int numTot = numRow | numCol | numBlock;
+                        int countZero = CountZero(numTot);
                         
                         if (countZero< countZeroMin || countZeroMin == -1)
                         {
@@ -182,15 +184,15 @@ namespace Omega_Sudoku
                 {
                     
                     this.sudokuMatrix[row, col] = number;
-                    this.RowsArr[row] |= (1 << (number - 1));
-                    this.ColsArr[col] |= (1 << (number - 1));
-                    this.BlockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] |= (1 << (number - 1));
+                    this.rowsArr[row] |= (1 << (number - 1));
+                    this.colsArr[col] |= (1 << (number - 1));
+                    this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] |= (1 << (number - 1));
                     if (SolveSudokuRec())
                         return true;
                     this.sudokuMatrix[row, col] = 0;
-                    this.RowsArr[row] &= ~(1 << (number - 1));
-                    this.ColsArr[col] &= ~(1 << (number - 1));
-                    this.BlockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] &= ~(1 << (number - 1));
+                    this.rowsArr[row] &= ~(1 << (number - 1));
+                    this.colsArr[col] &= ~(1 << (number - 1));
+                    this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] &= ~(1 << (number - 1));
                 }
             }
             return false;//no solution
