@@ -111,9 +111,9 @@ namespace Omega_Sudoku
                 {
                     CheckColumn(i);
                 }
-                for (int i = 0; i < sudokuMatrix.GetLength(0); i+=3)
+                for (int i = 0; i < sudokuMatrix.GetLength(0); i+=(int)Math.Sqrt(sudokuMatrix.GetLength(0)))
                 {
-                    for (int j = 0; j < sudokuMatrix.GetLength(1); j+=3)
+                    for (int j = 0; j < sudokuMatrix.GetLength(1); j+= (int)Math.Sqrt(sudokuMatrix.GetLength(1)))
                     {
                         CheckBlock(i, j);
                     }
