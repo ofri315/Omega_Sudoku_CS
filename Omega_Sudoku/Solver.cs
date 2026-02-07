@@ -11,16 +11,25 @@ using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
-    public class Solver
+    public class Solver : ISolver
     {
-        private int[,] mat;
-        public int[] RowsArr;
-        public int[] ColsArr;
-        public int[] BlockArr;
+        private int[,] sudokuMatrix;
+        public int[,] SudokuMatrix;
+        private int[] RowsArr;
+        private int[] ColsArr;
+        private int[] BlockArr;
+
+        
+
+        int[,] ISolver.SudokuMatrix
+        {
+            get => sudokuMatrix;  
+        }
+
         //Constractor
         public Solver(int[,] mat)
         {
-            this.mat = mat;
+            this.sudokuMatrix = mat;
             int n = mat.GetLength(0);
             this.RowsArr = new int[n];
             this.ColsArr = new int[n];
@@ -47,13 +56,13 @@ namespace Omega_Sudoku
         /// </summary>
         public void InitArrRow()
         {
-            for (int i = 0; i < mat.GetLength(0); i++)
+            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
             {
-                for (int j = 0; j < mat.GetLength(1); j++)
+                for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
                 {  
-                    if (mat[i, j] != 0)
+                    if (sudokuMatrix[i, j] != 0)
                     {
-                        this.RowsArr[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.RowsArr[i] |= (int)Math.Pow(2, this.sudokuMatrix[i, j] - 1);
                     }
 
                 }
@@ -65,12 +74,12 @@ namespace Omega_Sudoku
         /// </summary>
         public void InitArrCol()
         {
-            for (int i = 0; i < mat.GetLength(0); i++)
+            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
             {
-                for (int j = 0; j < mat.GetLength(1); j++)
+                for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
                 {
-                    if (mat[i, j] != 0)
-                        this.ColsArr[j] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                    if (sudokuMatrix[i, j] != 0)
+                        this.ColsArr[j] |= (int)Math.Pow(2, this.sudokuMatrix[i, j] - 1);
                 }
             }
         }
@@ -80,13 +89,13 @@ namespace Omega_Sudoku
         /// </summary>
         public void InitArrBlock()
         {
-            for (int i = 0; i < mat.GetLength(0); i++)
+            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
             {
-                for (int j = 0; j < mat.GetLength(1); j++)
+                for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
                 {
-                    if (mat[i, j] != 0)
+                    if (sudokuMatrix[i, j] != 0)
                     {
-                        this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (int)Math.Pow(2, this.sudokuMatrix[i, j] - 1);
                     }
                 }
             }
@@ -113,11 +122,11 @@ namespace Omega_Sudoku
             int countZeroMin = -1;
             int rowMin = -1;
             int colMin = -1;
-            for (int row = 0; row < this.mat.GetLength(0); row++)
+            for (int row = 0; row < this.sudokuMatrix.GetLength(0); row++)
             {
-                for (int col = 0; col < this.mat.GetLength(1); col++)
+                for (int col = 0; col < this.sudokuMatrix.GetLength(1); col++)
                 {
-                    if (this.mat[row,col]==0)
+                    if (this.sudokuMatrix[row,col]==0)
                     {
                         int numRow = this.RowsArr[row];
                         int numCol = this.ColsArr[col];
@@ -149,7 +158,7 @@ namespace Omega_Sudoku
                 count += number & 1;
                 number>>= 1;
             }
-            return this.mat.GetLength(0) - count;
+            return this.sudokuMatrix.GetLength(0) - count;
         }
         /// <summary>
         /// The function solves the sudoku using a recursion
@@ -163,17 +172,17 @@ namespace Omega_Sudoku
             (int row, int col) = FindNext();
             if (row == -1 && col == -1)
                 return true;
-            for (int number = mat.GetLength(0); number >0 ; number--)
+            for (int number = sudokuMatrix.GetLength(0); number >0 ; number--)
             {
                 if (IsValidPosition(number, row, col))
                 {
-                    this.mat[row, col] = number;
+                    this.sudokuMatrix[row, col] = number;
                     this.RowsArr[row] |= (1 << (number - 1));
                     this.ColsArr[col] |= (1 << (number - 1));
                     this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] |= (1 << (number - 1));
                     if (SolveSudokuRec(n))
                         return true;
-                    this.mat[row, col] = 0;
+                    this.sudokuMatrix[row, col] = 0;
                     this.RowsArr[row] &= ~(1 << (number - 1));
                     this.ColsArr[col] &= ~(1 << (number - 1));
                     this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] &= ~(1 << (number - 1));
@@ -181,24 +190,13 @@ namespace Omega_Sudoku
             }
             return false;//no solution
         }
-        public void printMatrix(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    Console.Write(matrix[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
-        }
 
         public bool Solve()
         {
             InitArrRow();
             InitArrCol();
             InitArrBlock();
-            if (SolveSudokuRec(mat.GetLength(0)))
+            if (SolveSudokuRec(this.sudokuMatrix.GetLength(0)))
                 return true;
             else
             {

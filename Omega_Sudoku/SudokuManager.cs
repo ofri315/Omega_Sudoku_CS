@@ -23,7 +23,7 @@ namespace Omega_Sudoku
                 int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(this.sudokuExpression);
                 SudokuValidation sudokuValidation=new SudokuValidation(SudokuMatrix);
                 sudokuValidation.CheckRowsColsBlocks();
-                Solver solver = new Solver(SudokuMatrix);
+                ISolver solver = new Solver(SudokuMatrix);
                 solver.Solve();
                 return SudokuMatrix;
             }
