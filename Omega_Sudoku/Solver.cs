@@ -157,7 +157,10 @@ namespace Omega_Sudoku
                             rowMin = row;
                             colMin = col;
                         }
-
+                        if (countZero == 1)
+                        {
+                            return (row, col);
+                        }
 
                     }
                     
