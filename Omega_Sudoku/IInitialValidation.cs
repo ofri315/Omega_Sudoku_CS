@@ -8,8 +8,14 @@ namespace Omega_Sudoku
 {
     public interface IInitialValidation
     {
+        /// <summary>
+        /// a string representing the Sudoku expression.
+        /// </summary>
         string SudokuExspression { get; }
 
+        /// <summary>
+        /// The function runs all the initial validation functions in the class.
+        /// </summary>
         void CheckAllInitialValidations();
 
     }

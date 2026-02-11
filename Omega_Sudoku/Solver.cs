@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
+    /// <summary>
+    /// The class deals with finding a solution to the Sudoku puzzle.
+    /// </summary>
     public class Solver : ISolver
     {
         private int[,] sudokuMatrix;
@@ -22,18 +25,23 @@ namespace Omega_Sudoku
         private int rowColBlocksize;
         private int subMatrixSideLength;
 
-
+        /// <summary>
+        /// The sudoku board as a matrix.
+        /// </summary>
         int[,] ISolver.SudokuMatrix
         {
             get => sudokuMatrix;  
         }
 
-        //Constractor
-        public Solver(int[,] mat)
+        /// <summary>
+        /// Initializes a new instance of the Solver class.
+        /// </summary>
+        /// <param name="matrix">The sudoku as a matrix.</param>
+        public Solver(int[,] matrix)
         {
-            this.sudokuMatrix = mat;
+            this.sudokuMatrix = matrix;
 
-            this.rowColBlocksize = mat.GetLength(0);
+            this.rowColBlocksize = matrix.GetLength(0);
             this.subMatrixSideLength = (int)Math.Sqrt(rowColBlocksize);
 
             this.rowsArr = new int[this.rowColBlocksize];
@@ -58,7 +66,7 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The function initializes the arr of rows where each row(index in the arr) represented by a binary number.
+        /// The function initializes the arr of rows where each row represented by a binary number.
         /// </summary>
         public void InitArrRow()
         {
@@ -76,7 +84,7 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The function initializes the dictionary of columns where each column(key in the dictionary) contains all the numbers in the columns(without 0).
+        ///The function initializes the arr of columns where each column represented by a binary number.
         /// </summary>
         public void InitArrCol()
         {
@@ -91,7 +99,7 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The function initializes the dictionary of blocks where each block(key in the dictionary) contains all the numbers in the block(without 0).
+        ///The function initializes the arr of blocks where each block represented by a binary number.
         /// </summary>
         public void InitArrBlock()
         {
@@ -110,10 +118,10 @@ namespace Omega_Sudoku
         /// <summary>
         /// The function checks if the number can be placed in the given position
         /// </summary>
-        /// <param name="number">number bettween 1-9</param>
+        /// <param name="number">A number to check if valid in the given position.</param>
         /// <param name="row">row number</param>
         /// <param name="col">col number</param>
-        /// <returns>true if the position is valid, false otherwise</returns>
+        /// <returns>True if the position is valid, false otherwise</returns>
         public bool IsValidPosition(int number, int row, int col)
         {
             int numRow = this.rowsArr[row];
@@ -121,8 +129,11 @@ namespace Omega_Sudoku
             int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * 3 + ((int)(col / this.subMatrixSideLength))];
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
-        
 
+        /// <summary>
+        /// The function finds the cell with the minimum number of possible numbers (which is the next cell).
+        /// </summary>
+        /// <returns>row and column of the next cell.</returns>
         public (int,int) FindNext()
         {
             int countZeroMin = -1;
@@ -146,7 +157,7 @@ namespace Omega_Sudoku
                             rowMin = row;
                             colMin = col;
                         }
-                        
+
 
                     }
                     
@@ -155,7 +166,11 @@ namespace Omega_Sudoku
             return (rowMin, colMin); 
         }
 
-
+        /// <summary>
+        /// The function counts how many zeros are there in a binary number. (which is the number possible options in a row/col/block).
+        /// </summary>
+        /// <param name="number">a number to count how many zeros it has.</param>
+        /// <returns>number of zeros.</returns>
         public int CountZero(int number)
         {
             int count = 0;
@@ -166,13 +181,11 @@ namespace Omega_Sudoku
             }
             return this.rowColBlocksize - count;
         }
+
         /// <summary>
-        /// The function solves the sudoku using a recursion
+        /// The function solves the sudoku using a recursion.
         /// </summary>
-        /// <param name="n">size of each row, col, and block</param>
-        /// <param name="i">row number to start from</param>
-        /// <param name="j">col number to start from</param>
-        /// <returns>true if the function found a solution, false otherwise</returns>
+        /// <returns>True if the function found a solution to the puzzle, false otherwise.</returns>
         public bool SolveSudokuRec()
         {
             (int row, int col) = FindNext();
@@ -195,9 +208,14 @@ namespace Omega_Sudoku
                     this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] &= ~(1 << (number - 1));
                 }
             }
-            return false;//no solution
+            return false;
         }
 
+        /// <summary>
+        /// The function manages the sudoku solver functions.
+        /// </summary>
+        /// <returns>True if there is a solution for the Sudoku puzzle.</returns>
+        /// <exception cref="Exception">Thrown if the Sudoku is unsolvable.</exception>
         public bool Solve()
         {
             InitArrRow();

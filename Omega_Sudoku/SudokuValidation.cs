@@ -9,14 +9,26 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
+    /// <summary>
+    /// The class handles the validation of the Sudoku board (checking for duplicates in the rows, columns, and submatrices).
+    /// </summary>
     public class SudokuValidation: IValidation
     {
         private int[,] sudokuMatrix;
         public int[,] SudokuMatrix;
+
+        /// <summary>
+        /// The sudoku board as a matrix.
+        /// </summary>
         int[,] IValidation.SudokuMatrix 
         {
             get => sudokuMatrix;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the SudokuValidation class.
+        /// </summary>
+        /// <param name="sudokuMatrix">The sudoku board.</param>
         public SudokuValidation(int[,] sudokuMatrix)
         {
             this.sudokuMatrix = sudokuMatrix;
@@ -24,9 +36,11 @@ namespace Omega_Sudoku
 
 
         /// <summary>
-        /// The method checks that each row has each number only one time
+        /// The method checks that a row has each number only one time.
         /// </summary>
-        /// <returns>True if in any row each digit appears only once, false otherwise.</returns>
+        /// <param name="row">row number</param>
+        /// <returns>True if in a row each digit appears only once.</returns>
+        /// <exception cref="ArgumentException">Thrown if a row contains a number more than once</exception>
         public bool CheckRow(int row)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(0)+1];
@@ -48,9 +62,11 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The method checks that each column has each number only one time
+        /// The method checks that a column has each number only one time.
         /// </summary>
-        /// <returns>True if in any column each digit appears only once, false otherwise.</returns>
+        /// <param name="col">column number</param>
+        /// <returns>True if in a column each digit appears only once.</returns>
+        /// <exception cref="ArgumentException">Thrown if a column contains a number more than once</exception>
         public bool CheckColumn(int col)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
@@ -69,12 +85,14 @@ namespace Omega_Sudoku
             }
             return true;
         }
-
+        
         /// <summary>
-        /// The method checks that each Block has each number only one time
+        /// The method checks that a sub-matrix has each number only one time.
         /// </summary>
-        /// <param name="sudokuMat">sudoku matrix</param>
-        /// <returns>True if in any Block each digit appears only once, false otherwise.</returns>
+        /// <param name="row">row number</param>
+        /// <param name="col">col number</param>
+        /// <returns>True if in a sub-matrix each digit appears only once.</returns>
+        /// <exception cref="ArgumentException">Thrown if a sub-matrix contains a number more than once</exception>
         public bool CheckBlock(int row, int col)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
@@ -98,7 +116,10 @@ namespace Omega_Sudoku
             return true;
         }
 
-
+        /// <summary>
+        /// The function checks that each row, column, and sub-matrix contains each number only once.
+        /// </summary>
+        /// <exception cref="Exception">Thrown if a row, a column or a sub-matrix contains a number more than once.</exception>
         public void CheckRowsColsBlocks()
         {
             try

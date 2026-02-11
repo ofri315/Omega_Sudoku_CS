@@ -6,13 +6,27 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
+    /// <summary>
+    /// The class is responsible for managing all functions for solving the Sudoku board.
+    /// </summary>
     public class SudokuManager
     {
         private string sudokuExpression;
+
+        /// <summary>
+        /// Initializes a new instance of the SudokuManager class.
+        /// </summary>
+        /// <param name="sudokuExpression">A string representing the Sudoku board.</param>
         public SudokuManager(string sudokuExpression)
         {
             this.sudokuExpression = sudokuExpression;
         }
+
+        /// <summary>
+        /// The function handles solving the Sudoku puzzle (including validity checks and conversion to a matrix).
+        /// </summary>
+        /// <returns>the Solved Sudoku matrix.</returns>
+        /// <exception cref="Exception">Thrown if there is a problem with the sudoku puzzle with a suitable message.</exception>
         public int[,] SolveSudoku()
         {
             try
@@ -36,7 +50,12 @@ namespace Omega_Sudoku
                 throw new Exception(error.Message);
             }
         }
-        
+
+        /// <summary>
+        /// The function handles solving the Sudoku puzzle and converting it back to a string for the unit tests.
+        /// </summary>
+        /// <returns>the Solved Sudoku expression.</returns>
+        /// <exception cref="Exception">Thrown if there is a problem with the sudoku puzzle with a suitable message.</exception>
         public string SolveForTests()
         {
             try

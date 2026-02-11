@@ -8,6 +8,10 @@ namespace Omega_Sudoku
 {
     public class PrintSudoku
     {
+        /// <summary>
+        /// The function prints the Sudoku board.
+        /// </summary>
+        /// <param name="matrix">Sudoku board for printing</param>
         public static void PrintSudokuMatrix(int[,] matrix)
         {
             for (int row = 0; row < matrix.GetLength(0);row++)
