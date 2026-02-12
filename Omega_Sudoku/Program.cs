@@ -31,8 +31,7 @@ namespace Omega_Sudoku
                     Console.WriteLine("Sudoku Before Solution:");
                     PrintSudoku.PrintSudokuMatrix(matrixBefore);
 
-                    SudokuManager sudokuManager = new SudokuManager(sudokuExpression);
-                    int[,] matrixAfter = sudokuManager.SolveSudoku();
+                    int[,] matrixAfter = new SudokuManager().SolveSudoku(sudokuExpression);
                     stopwatch.Stop();
                     TimeSpan elapsedTime = stopwatch.Elapsed;
                     TimeSpan elapsedTime1 = stopwatch.Elapsed;

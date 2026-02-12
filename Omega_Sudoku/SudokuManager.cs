@@ -11,31 +11,22 @@ namespace Omega_Sudoku
     /// </summary>
     public class SudokuManager
     {
-        private string sudokuExpression;
-
-        /// <summary>
-        /// Initializes a new instance of the SudokuManager class.
-        /// </summary>
-        /// <param name="sudokuExpression">A string representing the Sudoku board.</param>
-        public SudokuManager(string sudokuExpression)
-        {
-            this.sudokuExpression = sudokuExpression;
-        }
 
         /// <summary>
         /// The function handles solving the Sudoku puzzle (including validity checks and conversion to a matrix).
         /// </summary>
+        /// <param name="sudokuExpression">a string representing the Sudoku expression.</param>
         /// <returns>the Solved Sudoku matrix.</returns>
         /// <exception cref="Exception">Thrown if there is a problem with the sudoku puzzle with a suitable message.</exception>
-        public int[,] SolveSudoku()
+        public int[,] SolveSudoku(string sudokuExpression)
         {
             try
             {
-                SudokuInitialValidation InitialValidation = new SudokuInitialValidation(this.sudokuExpression);
+                SudokuInitialValidation InitialValidation = new SudokuInitialValidation(sudokuExpression);
                 InitialValidation.CheckAllInitialValidations();
 
                 ConvertSudoku convertor = new ConvertSudoku();
-                int[,] SudokuMatrix = convertor.ConvertStringToMatrix(this.sudokuExpression);
+                int[,] SudokuMatrix = convertor.ConvertStringToMatrix(sudokuExpression);
 
                 SudokuValidation Validation = new SudokuValidation(SudokuMatrix);
                 Validation.CheckRowsColsBlocks();
@@ -54,13 +45,14 @@ namespace Omega_Sudoku
         /// <summary>
         /// The function handles solving the Sudoku puzzle and converting it back to a string for the unit tests.
         /// </summary>
+        /// <param name="sudokuExpression">a string representing the Sudoku expression.</param>
         /// <returns>the Solved Sudoku expression.</returns>
         /// <exception cref="Exception">Thrown if there is a problem with the sudoku puzzle with a suitable message.</exception>
-        public string SolveForTests()
+        public string SolveForTests(string sudokuExpression)
         {
             try
             {
-                int[,] sudokuMat=SolveSudoku();
+                int[,] sudokuMat=SolveSudoku(sudokuExpression);
                 ConvertSudoku convertor=new ConvertSudoku();
                 return convertor.ConvertMatrixToString(sudokuMat);
             }
