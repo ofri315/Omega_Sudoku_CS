@@ -162,6 +162,11 @@ namespace Omega_Sudoku
                         {
                             return (row, col);
                         }
+                        if (CountZero(numRow) == 1 || CountZero(numCol) == 1 || CountZero(numBlock) == 1)
+                        {
+                            return (row, col);
+                        }
+
 
                     }
                     
@@ -169,7 +174,7 @@ namespace Omega_Sudoku
             }
             return (rowMin, colMin); 
         }
-
+        
         /// <summary>
         /// The function counts how many zeros are there in a binary number. (which is the number possible options in a row/col/block).
         /// </summary>

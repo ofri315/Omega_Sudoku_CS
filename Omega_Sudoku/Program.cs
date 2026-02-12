@@ -41,7 +41,8 @@ namespace Omega_Sudoku
                 }
                 catch (Exception error)
                 {
-                    Console.WriteLine(error.Message);
+                    //Console.WriteLine(error.Message);
+                    throw new Exception(error.Message); 
                 }
 
             }
