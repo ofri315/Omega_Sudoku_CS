@@ -9,7 +9,7 @@ namespace Omega_Sudoku
     /// <summary>
     /// The class is responsible for managing all functions for solving the Sudoku board.
     /// </summary>
-    public class SudokuManager
+    public class SudokuManager : IManager
     {
 
         /// <summary>
