@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Omega_Sudoku
+namespace Omega_Sudoku.Interfaces
 {
     internal interface IConverSudoku
     {

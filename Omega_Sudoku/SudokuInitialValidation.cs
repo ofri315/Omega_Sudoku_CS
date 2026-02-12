@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Omega_Sudoku.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
