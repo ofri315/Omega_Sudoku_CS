@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
-    public class ConvertSudoku :IConverSudoku
+    /// <summary>
+    /// The class is responsible for converting Sudoku from string to matrix and from matrix to string (inherits from IConvertSudoku interface).
+    /// </summary>
+    public class ConvertSudoku :IConvertSudoku
     {
         /// <summary>
         /// The function receives a string representing the Sudoku and converts it to a matrix.

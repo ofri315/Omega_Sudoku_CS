@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace Omega_Sudoku
 {
-    
     public class Program
     {
         /// <summary>

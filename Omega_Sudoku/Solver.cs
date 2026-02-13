@@ -13,7 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
     /// <summary>
-    /// The class deals with finding a solution to the Sudoku puzzle.
+    /// The class is responsible for finding a solution to the Sudoku puzzle.
     /// </summary>
     public class Solver : ISolver
     {
@@ -117,18 +117,19 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The function checks if the number can be placed in the given position
+        /// The function counts how many zeros are there in a binary number. (which is the number possible options in a row/col/block).
         /// </summary>
-        /// <param name="number">A number to check if valid in the given position.</param>
-        /// <param name="row">row number</param>
-        /// <param name="col">col number</param>
-        /// <returns>True if the position is valid, false otherwise</returns>
-        public bool IsValidPosition(int number, int row, int col)
+        /// <param name="number">a number to count how many zeros it has.</param>
+        /// <returns>number of zeros.</returns>
+        public int CountZero(int number)
         {
-            int numRow = this.rowsArr[row];
-            int numCol = this.colsArr[col];
-            int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
-            return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
+            int count = 0;
+            while (number != 0)
+            {
+                count += number & 1;
+                number >>= 1;
+            }
+            return this.rowColBlocksize - count;
         }
 
         /// <summary>
@@ -166,28 +167,27 @@ namespace Omega_Sudoku
                         {
                             return (row, col);
                         }
-
                     }
-                    
                 }
             }
             return (rowMin, colMin); 
         }
         
+
+
         /// <summary>
-        /// The function counts how many zeros are there in a binary number. (which is the number possible options in a row/col/block).
+        /// The function checks if the number can be placed in the given position
         /// </summary>
-        /// <param name="number">a number to count how many zeros it has.</param>
-        /// <returns>number of zeros.</returns>
-        public int CountZero(int number)
+        /// <param name="number">A number to check if valid in the given position.</param>
+        /// <param name="row">row number</param>
+        /// <param name="col">col number</param>
+        /// <returns>True if the position is valid, false otherwise</returns>
+        public bool IsValidPosition(int number, int row, int col)
         {
-            int count = 0;
-            while(number!=0)
-            {
-                count += number & 1;
-                number>>= 1;
-            }
-            return this.rowColBlocksize - count;
+            int numRow = this.rowsArr[row];
+            int numCol = this.colsArr[col];
+            int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
+            return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
 
         /// <summary>
