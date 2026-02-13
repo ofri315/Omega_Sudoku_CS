@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Omega_Sudoku.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -7,42 +8,42 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
-    public class ConvertSudoku
+    public class ConvertSudoku :IConverSudoku
     {
         /// <summary>
-        /// הפעולה מקבלת מחרוזת המייצגת את הסודוקו וממירה למערך דו מימדי
+        /// The function receives a string representing the Sudoku and converts it to a matrix.
         /// </summary>
-        /// <param name="sudokuExpression">הביטוי המייצג סודוקו להמרה</param>
-        /// <returns>מערך דו מימדי המייצג את הסודוקו טרם פתירתו</returns>
+        /// <param name="sudokuExpression">The Sudoku expression for conversion.</param>
+        /// <returns>A matrix representing the Sudoku board.</returns>
         public int[,] ConvertStringToMatrix(string sudokuExpression)
         {
-            int n = (int)Math.Sqrt(sudokuExpression.Length);
-            int[,] sudokuMatrix = new int[n,n];
-            int k = 0;
-            for (int i = 0; i <n; i++)
+            int rowColBlockLength = (int)Math.Sqrt(sudokuExpression.Length);
+            int[,] sudokuMatrix = new int[rowColBlockLength, rowColBlockLength];
+            int stringIndex = 0;
+            for (int row = 0; row < rowColBlockLength; row++)
             {
-                for (int j = 0; j < n; j++)
+                for (int col = 0; col < rowColBlockLength; col++)
                 {
-                    sudokuMatrix[i,j] = (int)sudokuExpression[k]-'0';
-                    k++;
+                    sudokuMatrix[row,col] = (int)sudokuExpression[stringIndex] -'0';
+                    stringIndex++;
                 }
             }
             return sudokuMatrix;
         }
 
         /// <summary>
-        /// הפעולה ממירה את המטריצה חזרה למחרוזת
+        /// The function converts the matrix to a string.
         /// </summary>
-        /// <param name="sudokuMatrix">מטריצה המייצגת סודוקו</param>
-        /// <returns>מחרוזת המייצת את הסודוקו</returns>
+        /// <param name="sudokuMatrix">The Sudoku matrix for conversion.</param>
+        /// <returns>A string representing the Sudoku board.</returns>
         public string ConvertMatrixToString(int[,] sudokuMatrix)
         {
             string sudokuExpression = "";
-            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+            for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
             {
-                for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
+                for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
                 {
-                    sudokuExpression += sudokuMatrix[i, j];
+                    sudokuExpression += sudokuMatrix[row, col];
                 }
             }
             return sudokuExpression;

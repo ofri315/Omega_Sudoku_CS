@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Omega_Sudoku.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,9 +10,26 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Omega_Sudoku
 {
-    class SudokuValidation
+    /// <summary>
+    /// The class handles the validation of the Sudoku board (checking for duplicates in the rows, columns, and submatrices).
+    /// </summary>
+    public class SudokuValidation: IValidation
     {
         private int[,] sudokuMatrix;
+        public int[,] SudokuMatrix;
+
+        /// <summary>
+        /// The sudoku board as a matrix.
+        /// </summary>
+        int[,] IValidation.SudokuMatrix 
+        {
+            get => sudokuMatrix;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the SudokuValidation class.
+        /// </summary>
+        /// <param name="sudokuMatrix">The sudoku board.</param>
         public SudokuValidation(int[,] sudokuMatrix)
         {
             this.sudokuMatrix = sudokuMatrix;
@@ -19,9 +37,11 @@ namespace Omega_Sudoku
 
 
         /// <summary>
-        /// The method checks that each row has each number only one time
+        /// The method checks that a row has each number only one time.
         /// </summary>
-        /// <returns>True if in any row each digit appears only once, false otherwise.</returns>
+        /// <param name="row">row number</param>
+        /// <returns>True if in a row each digit appears only once.</returns>
+        /// <exception cref="ArgumentException">Thrown if a row contains a number more than once</exception>
         public bool CheckRow(int row)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(0)+1];
@@ -29,25 +49,25 @@ namespace Omega_Sudoku
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
+            for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
             {
-                countDigArr[sudokuMatrix[row, i]]++;
+                countDigArr[sudokuMatrix[row, col]]++;
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
                 if (countDigArr[i] > 1)
-                    return false;
-                else
-                    throw new ArgumentException(string.Format("The number {0} appears more then once in row number:{1}", i+1, row));
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in row number:{1}", i, row));
 
             }
             return true;
         }
 
         /// <summary>
-        /// The method checks that each column has each number only one time
+        /// The method checks that a column has each number only one time.
         /// </summary>
-        /// <returns>True if in any column each digit appears only once, false otherwise.</returns>
+        /// <param name="col">column number</param>
+        /// <returns>True if in a column each digit appears only once.</returns>
+        /// <exception cref="ArgumentException">Thrown if a column contains a number more than once</exception>
         public bool CheckColumn(int col)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
@@ -55,70 +75,71 @@ namespace Omega_Sudoku
             {
                 countDigArr[i] = 0;
             }
-            for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+            for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
             {
-                countDigArr[sudokuMatrix[i,col]]++;
+                countDigArr[sudokuMatrix[row,col]]++;
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
                 if (countDigArr[i] > 1)
-                    return false;
-                else
-                    throw new ArgumentException(string.Format("The number {0} appears more then once in col number:{1}", i + 1, col));
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in col number:{1}", i, col));
             }
             return true;
         }
-
+        
         /// <summary>
-        /// The method checks that each Block has each number only one time
+        /// The method checks that a sub-matrix has each number only one time.
         /// </summary>
-        /// <param name="sudokuMat">sudoku matrix</param>
-        /// <returns>True if in any Block each digit appears only once, false otherwise.</returns>
+        /// <param name="row">row number</param>
+        /// <param name="col">col number</param>
+        /// <returns>True if in a sub-matrix each digit appears only once.</returns>
+        /// <exception cref="ArgumentException">Thrown if a sub-matrix contains a number more than once</exception>
         public bool CheckBlock(int row, int col)
         {
             int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
-            for (int i = 0; i < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); i++)
+            for (int i = 0; i < countDigArr.Length; i++)
             {
-                for (int j = 0; j < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); j++)
+                countDigArr[i] = 0;
+            }
+            for (int rowIndex = 0; rowIndex < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); rowIndex++)
+            {
+                for (int colIndex = 0; colIndex < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); colIndex++)
                 {
-                    int curr = sudokuMatrix[row + i, col + j];
+                    int curr = sudokuMatrix[row + rowIndex, col + colIndex];
                     countDigArr[curr]++;
                 }
             }
             for (int i = 1; i < countDigArr.Length; i++)
             {
                 if (countDigArr[i] > 1)
-                    return false;
-                else
-                    throw new ArgumentException(string.Format("The number {0} appears more then once in block number:{1}", i + 1, (int)(row / 3) * 3 + ((int)(col / 3))));
+                    throw new ArgumentException(string.Format("The number {0} appears more then once in block number:{1}", i, (int)(row / 3) * 3 + ((int)(col / 3))));
             }
             return true;
         }
 
-
-        public bool CheckRowsColsBlocks()
+        /// <summary>
+        /// The function checks that each row, column, and sub-matrix contains each number only once.
+        /// </summary>
+        /// <exception cref="Exception">Thrown if a row, a column or a sub-matrix contains a number more than once.</exception>
+        public void CheckRowsColsBlocks()
         {
             try
             {
-                for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+                for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
                 {
-                    if (!CheckRow(i))
-                        return false;
+                    CheckRow(row);
                 }
-                for (int i = 0; i < sudokuMatrix.GetLength(1); i++)
+                for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
                 {
-                    if (!CheckColumn(i))
-                        return false;
+                    CheckColumn(col);
                 }
-                for (int i = 0; i < sudokuMatrix.GetLength(0); i++)
+                for (int row = 0; row < sudokuMatrix.GetLength(0); row+=(int)Math.Sqrt(sudokuMatrix.GetLength(0)))
                 {
-                    for (int j = 0; j < sudokuMatrix.GetLength(1); j++)
+                    for (int col = 0; col < sudokuMatrix.GetLength(1); col+= (int)Math.Sqrt(sudokuMatrix.GetLength(1)))
                     {
-                        if (!CheckBlock(i, j))
-                            return false;
+                        CheckBlock(row, col);
                     }
                 }
-                return true;
             }
             catch (Exception error)
             {

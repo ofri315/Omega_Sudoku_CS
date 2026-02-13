@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Omega_Sudoku.Interfaces;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,49 +12,72 @@ using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
-    internal class Solver
+    /// <summary>
+    /// The class deals with finding a solution to the Sudoku puzzle.
+    /// </summary>
+    public class Solver : ISolver
     {
-        private int[,] mat;
-        public int[] RowsArr;
-        public int[] ColsArr;
-        public int[] BlockArr;
-        //Constractor
-        public Solver(int[,] mat)
+        private int[,] sudokuMatrix;
+        public int[,] SudokuMatrix;
+        private int[] rowsArr;
+        private int[] colsArr;
+        private int[] blockArr;
+
+        private int rowColBlocksize;
+        private int subMatrixSideLength;
+
+        /// <summary>
+        /// The sudoku board as a matrix.
+        /// </summary>
+        int[,] ISolver.SudokuMatrix
         {
-            this.mat = mat;
-            int n = mat.GetLength(0);
-            this.RowsArr = new int[n];
-            this.ColsArr = new int[n];
-            this.BlockArr = new int[n];
-            for (int i = 0; i < n; i++)
+            get => sudokuMatrix;  
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Solver class.
+        /// </summary>
+        /// <param name="matrix">The sudoku as a matrix.</param>
+        public Solver(int[,] matrix)
+        {
+            this.sudokuMatrix = matrix;
+
+            this.rowColBlocksize = matrix.GetLength(0);
+            this.subMatrixSideLength = (int)Math.Sqrt(rowColBlocksize);
+
+            this.rowsArr = new int[this.rowColBlocksize];
+            this.colsArr = new int[this.rowColBlocksize];
+            this.blockArr = new int[this.rowColBlocksize];
+
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                this.RowsArr[i] = 0;
+                this.rowsArr[row] = 0;
             }
-            for (int i = 0; i < n; i++)
+            for (int col = 0; col < this.rowColBlocksize; col++)
             {
-                this.ColsArr[i] = 0;
+                this.colsArr[col] = 0;
             }
-            for (int i = 0; i < (mat.GetLength(0)); i += 3)
+            for (int row = 0; row < this.rowColBlocksize; row += this.subMatrixSideLength)
             {
-                for (int j = 0; j < (mat.GetLength(1)); j += 3)
+                for (int col = 0; col < this.rowColBlocksize; col += this.subMatrixSideLength)
                 {
-                    this.BlockArr[i + ((int)(j / 3))] = 0;
+                    this.blockArr[row + ((int)(col / subMatrixSideLength))] = 0;
                 }
             }
         }
 
         /// <summary>
-        /// The function initializes the dictionary of rows where each row(key in the dictionary) contains all the numbers in the row(without 0).
+        /// The function initializes the arr of rows where each row represented by a binary number.
         /// </summary>
         public void InitArrRow()
         {
-            for (int i = 0; i < mat.GetLength(0); i++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int j = 0; j < mat.GetLength(1); j++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {  
-                    if (mat[i, j] != 0)
+                    if (sudokuMatrix[row, col] != 0)
                     {
-                        this.RowsArr[i] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.rowsArr[row] |= (int)Math.Pow(2, this.sudokuMatrix[row, col] - 1);
                     }
 
                 }
@@ -61,32 +85,32 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The function initializes the dictionary of columns where each column(key in the dictionary) contains all the numbers in the columns(without 0).
+        ///The function initializes the arr of columns where each column represented by a binary number.
         /// </summary>
         public void InitArrCol()
         {
-            for (int i = 0; i < mat.GetLength(0); i++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int j = 0; j < mat.GetLength(1); j++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {
-                    if (mat[i, j] != 0)
-                        this.ColsArr[j] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                    if (sudokuMatrix[row, col] != 0)
+                        this.colsArr[col] |= (int)Math.Pow(2, this.sudokuMatrix[row, col] - 1);
                 }
             }
         }
 
         /// <summary>
-        /// The function initializes the dictionary of blocks where each block(key in the dictionary) contains all the numbers in the block(without 0).
+        ///The function initializes the arr of blocks where each block represented by a binary number.
         /// </summary>
         public void InitArrBlock()
         {
-            for (int i = 0; i < mat.GetLength(0); i++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int j = 0; j < mat.GetLength(1); j++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {
-                    if (mat[i, j] != 0)
+                    if (sudokuMatrix[row, col] != 0)
                     {
-                        this.BlockArr[(int)(i / 3) * 3 + ((int)(j / 3))] |= (int)Math.Pow(2, this.mat[i, j] - 1);
+                        this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] |= (int)Math.Pow(2, this.sudokuMatrix[row, col] - 1);
                     }
                 }
             }
@@ -95,35 +119,38 @@ namespace Omega_Sudoku
         /// <summary>
         /// The function checks if the number can be placed in the given position
         /// </summary>
-        /// <param name="number">number bettween 1-9</param>
+        /// <param name="number">A number to check if valid in the given position.</param>
         /// <param name="row">row number</param>
         /// <param name="col">col number</param>
-        /// <returns>true if the position is valid, false otherwise</returns>
+        /// <returns>True if the position is valid, false otherwise</returns>
         public bool IsValidPosition(int number, int row, int col)
         {
-            int numRow = this.RowsArr[row];
-            int numCol = this.ColsArr[col];
-            int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
+            int numRow = this.rowsArr[row];
+            int numCol = this.colsArr[col];
+            int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
-        
 
+        /// <summary>
+        /// The function finds the cell with the minimum number of possible numbers (which is the next cell).
+        /// </summary>
+        /// <returns>row and column of the next cell.</returns>
         public (int,int) FindNext()
         {
             int countZeroMin = -1;
             int rowMin = -1;
             int colMin = -1;
-            for (int row = 0; row < this.mat.GetLength(0); row++)
+            for (int row = 0; row < this.rowColBlocksize; row++)
             {
-                for (int col = 0; col < this.mat.GetLength(1); col++)
+                for (int col = 0; col < this.rowColBlocksize; col++)
                 {
-                    if (this.mat[row,col]==0)
+                    if (this.sudokuMatrix[row,col]==0)
                     {
-                        int numRow = this.RowsArr[row];
-                        int numCol = this.ColsArr[col];
-                        int numBlock = this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))];
-                        int numtot = numRow | numCol | numBlock;
-                        int countZero = CountZero(numtot);
+                        int numRow = this.rowsArr[row];
+                        int numCol = this.colsArr[col];
+                        int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
+                        int numTot = numRow | numCol | numBlock;
+                        int countZero = CountZero(numTot);
                         
                         if (countZero< countZeroMin || countZeroMin == -1)
                         {
@@ -131,7 +158,14 @@ namespace Omega_Sudoku
                             rowMin = row;
                             colMin = col;
                         }
-                        
+                        if (countZero == 1)
+                        {
+                            return (row, col);
+                        }
+                        if (CountZero(numRow) == 1 || CountZero(numCol) == 1 || CountZero(numBlock) == 1)
+                        {
+                            return (row, col);
+                        }
 
                     }
                     
@@ -139,8 +173,12 @@ namespace Omega_Sudoku
             }
             return (rowMin, colMin); 
         }
-
-
+        
+        /// <summary>
+        /// The function counts how many zeros are there in a binary number. (which is the number possible options in a row/col/block).
+        /// </summary>
+        /// <param name="number">a number to count how many zeros it has.</param>
+        /// <returns>number of zeros.</returns>
         public int CountZero(int number)
         {
             int count = 0;
@@ -149,56 +187,49 @@ namespace Omega_Sudoku
                 count += number & 1;
                 number>>= 1;
             }
-            return this.mat.GetLength(0) - count;
+            return this.rowColBlocksize - count;
         }
+
         /// <summary>
-        /// The function solves the sudoku using a recursion
+        /// The function solves the sudoku using a recursion.
         /// </summary>
-        /// <param name="n">size of each row, col, and block</param>
-        /// <param name="i">row number to start from</param>
-        /// <param name="j">col number to start from</param>
-        /// <returns>true if the function found a solution, false otherwise</returns>
-        public bool SolveSudokuRec(int n)
+        /// <returns>True if the function found a solution to the puzzle, false otherwise.</returns>
+        public bool SolveSudokuRec()
         {
             (int row, int col) = FindNext();
             if (row == -1 && col == -1)
                 return true;
-            for (int number = mat.GetLength(0); number >0 ; number--)
+            for (int number = this.rowColBlocksize; number >0 ; number--)
             {
                 if (IsValidPosition(number, row, col))
                 {
-                    this.mat[row, col] = number;
-                    this.RowsArr[row] |= (1 << (number - 1));
-                    this.ColsArr[col] |= (1 << (number - 1));
-                    this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] |= (1 << (number - 1));
-                    if (SolveSudokuRec(n))
+                    
+                    this.sudokuMatrix[row, col] = number;
+                    this.rowsArr[row] |= (1 << (number - 1));
+                    this.colsArr[col] |= (1 << (number - 1));
+                    this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] |= (1 << (number - 1));
+                    if (SolveSudokuRec())
                         return true;
-                    this.mat[row, col] = 0;
-                    this.RowsArr[row] &= ~(1 << (number - 1));
-                    this.ColsArr[col] &= ~(1 << (number - 1));
-                    this.BlockArr[(int)(row / 3) * 3 + ((int)(col / 3))] &= ~(1 << (number - 1));
+                    this.sudokuMatrix[row, col] = 0;
+                    this.rowsArr[row] &= ~(1 << (number - 1));
+                    this.colsArr[col] &= ~(1 << (number - 1));
+                    this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))] &= ~(1 << (number - 1));
                 }
             }
-            return false;//no solution
-        }
-        public void printMatrix(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    Console.Write(matrix[i, j] + " ");
-                }
-                Console.WriteLine();
-            }
+            return false;
         }
 
+        /// <summary>
+        /// The function manages the sudoku solver functions.
+        /// </summary>
+        /// <returns>True if there is a solution for the Sudoku puzzle.</returns>
+        /// <exception cref="Exception">Thrown if the Sudoku is unsolvable.</exception>
         public bool Solve()
         {
             InitArrRow();
             InitArrCol();
             InitArrBlock();
-            if (SolveSudokuRec(mat.GetLength(0)))
+            if (SolveSudokuRec())
                 return true;
             else
             {

@@ -6,70 +6,33 @@ using System.Runtime.InteropServices;
 
 namespace Omega_Sudoku
 {
-
-    internal class Program
+    
+    public class Program
     {
-        public static void printdict(Dictionary<int, int> dict)
+        /// <summary>
+        /// The function runs the main loop that handles the sudoku solver.
+        /// </summary>
+        /// <exception cref="Exception">throw an error when the expression input is invalid, or when the Sudoku is unsolvable.</exception>
+        public static void RunSudokuSolver()
         {
-            for (int i = 0; i < dict.Count; i++)
+            while (true)
             {
-                Console.WriteLine(Convert.ToString(dict[i], 2));
-            }
-        }
-        public static void printdictBlock(Dictionary<(int x, int y), int> dict)
-        {
-            int j = 0;
-            for (int i = 0; i < dict.Count; i++)
-            {
-                Console.WriteLine(Convert.ToString(dict[((int)(i/3), (int)(j))], 2));
-                j++;
-                if (j > 2)
-                    j = 0;
-            }
-        }
-        public static void printMatrix(int[,] matrix)
-        {
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j++)
+                try
                 {
-                    Console.Write(matrix[i, j] + " ");
+                    Console.WriteLine("Enter Sudoku Expression:");
+                    string sudokuExpression = Console.ReadLine();
+                    new SudokuManager().SolveSudoku(sudokuExpression);
                 }
-                Console.WriteLine();
-            }
-            
+                catch (Exception error)
+                {
+                    Console.WriteLine(error.Message);
+                }
 
-        }
-        public static int[,]? SolveSudoku(string sudokuExpression)
-        {
-            try
-            {
-                SudokuInitialValidation sudokuInitialValidation = new SudokuInitialValidation(sudokuExpression);
-                sudokuInitialValidation.CheckAllInitialValidations();
-                ConvertSudoku convertSudoku = new ConvertSudoku();
-                int[,] SudokuMatrix = convertSudoku.ConvertStringToMatrix(sudokuExpression);
-                Solver solver = new Solver(SudokuMatrix);
-                solver.Solve();
-                return SudokuMatrix;
-            }
-            catch (Exception error)
-            {
-                Console.WriteLine(error.Message);
-                return null;
             }
         }
         static void Main(string[] args)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            int[,] mat = SolveSudoku("000060080020000000001000000070000102500030000000000400004201000300700600000000050");
-            stopwatch.Stop();
-            TimeSpan elapsedTime1 = stopwatch.Elapsed;
-            printMatrix(mat);
-            Console.WriteLine(elapsedTime1.TotalSeconds);
-
-
-
+            RunSudokuSolver();
         }
     }
 }
