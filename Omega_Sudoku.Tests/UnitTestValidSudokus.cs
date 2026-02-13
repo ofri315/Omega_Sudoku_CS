@@ -99,5 +99,15 @@ namespace Omega_Sudoku.Tests
         }
 
 
+        [Fact]
+        public void TestWithValidSudoku11()
+        {
+            string solvedExpression = new SudokuManager().SolveForTests("200000060000300040760000000508000200000061000000400000000030709010000000000700000");
+            string expected = "234597168189326547765814392548973216973261854621458973456132789317689425892745631";
+            Assert.Equal(solvedExpression, expected);
+
+        }
+
+
     }
 }

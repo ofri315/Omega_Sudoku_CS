@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku
 {
+    /// <summary>
+    /// The class is responsible for the Sudoku matrix printing function.
+    /// </summary>
     public class PrintSudoku
     {
         /// <summary>

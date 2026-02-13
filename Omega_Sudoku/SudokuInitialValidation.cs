@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
     /// <summary>
-    /// The class handles the initial validation of the Sudoku Expression.
+    /// The class handles the initial validation of the Sudoku Expression. (inherits from IInitialValidation interface).
     /// </summary>
     public class SudokuInitialValidation : IInitialValidation
     {
@@ -82,7 +82,7 @@ namespace Omega_Sudoku
             double subMatrixLength= Math.Sqrt(rowColBlockLength);
             if (subMatrixLength - (int)subMatrixLength == 0)
                 return true;
-            throw new ArgumentException("The length of the sub matrices sides is not equal (NxN).");
+            throw new ArgumentException("The size of the sub matrices is not a square root.");
         }
 
 

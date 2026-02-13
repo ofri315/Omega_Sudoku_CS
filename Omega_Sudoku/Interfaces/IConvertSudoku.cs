@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku.Interfaces
 {
-    internal interface IConverSudoku
+    /// <summary>
+    /// The interface provides a contract describing the functions required to convert a Sudoku.
+    /// </summary>
+    internal interface IConvertSudoku
     {
         /// <summary>
         /// The function receives a string representing the Sudoku and converts it to a matrix.

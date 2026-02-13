@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku.Interfaces
 {
+    /// <summary>
+    /// The interface provides a contract describing the function and property required to solve a sudoku Board.
+    /// </summary>
     public interface ISolver
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace Omega_Sudoku.Interfaces
         /// <summary>
         /// The function manages the sudoku solver functions.
         /// </summary>
-        /// <returns>True if there is a solution for the Sudoku puzzle.</returns>
+        /// <returns>True if there is a solution for the Sudoku puzzle. otherwise throws an exception.</returns>
         bool Solve();
 
 

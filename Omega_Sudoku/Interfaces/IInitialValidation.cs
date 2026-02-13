@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku.Interfaces
 {
+    /// <summary>
+    ///  The interface provides a contract describing the function and property required to check if a sudoku expression is valid (length and type of characters)
+    /// </summary>
     public interface IInitialValidation
     {
         /// <summary>
@@ -14,7 +17,7 @@ namespace Omega_Sudoku.Interfaces
         string SudokuExspression { get; }
 
         /// <summary>
-        /// The function runs all the initial validation functions in the class.
+        /// The function checks that the Sudoku string input is valid.
         /// </summary>
         void CheckAllInitialValidations();
 

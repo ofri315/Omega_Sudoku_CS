@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Omega_Sudoku.Interfaces
 {
+    /// <summary>
+    ///  The interface provides a contract describing the functions required to handle the Sudoku Solver.
+    /// </summary>
     internal interface IManager
     {
         /// <summary>
