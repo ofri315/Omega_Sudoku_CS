@@ -35,7 +35,19 @@ namespace Omega_Sudoku
             this.sudokuMatrix = sudokuMatrix;
         }
 
-
+        /// <summary>
+        /// The function creates a count arr and initializes it.
+        /// </summary>
+        /// <returns>The count arr.</returns>
+        public int[] InitCountArr()
+        {
+            int[] countDigArr= new int[sudokuMatrix.GetLength(0) + 1];
+            for (int i = 0; i < countDigArr.Length; i++)
+            {
+                countDigArr[i] = 0;
+            }
+            return countDigArr;
+        }
         /// <summary>
         /// The method checks that a row has each number only one time.
         /// </summary>
@@ -44,11 +56,7 @@ namespace Omega_Sudoku
         /// <exception cref="ArgumentException">Thrown if a row contains a number more than once</exception>
         public bool CheckRow(int row)
         {
-            int[] countDigArr = new int[sudokuMatrix.GetLength(0)+1];
-            for (int i = 0;  i < countDigArr.Length;  i++)
-            {
-                countDigArr[i] = 0;
-            }
+            int[] countDigArr = InitCountArr();
             for (int col = 0; col < sudokuMatrix.GetLength(1); col++)
             {
                 countDigArr[sudokuMatrix[row, col]]++;
@@ -70,11 +78,7 @@ namespace Omega_Sudoku
         /// <exception cref="ArgumentException">Thrown if a column contains a number more than once</exception>
         public bool CheckColumn(int col)
         {
-            int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
-            for (int i = 0; i < countDigArr.Length; i++)
-            {
-                countDigArr[i] = 0;
-            }
+            int[] countDigArr = InitCountArr();
             for (int row = 0; row < sudokuMatrix.GetLength(0); row++)
             {
                 countDigArr[sudokuMatrix[row,col]]++;
@@ -96,11 +100,7 @@ namespace Omega_Sudoku
         /// <exception cref="ArgumentException">Thrown if a sub-matrix contains a number more than once</exception>
         public bool CheckBlock(int row, int col)
         {
-            int[] countDigArr = new int[sudokuMatrix.GetLength(1) + 1];
-            for (int i = 0; i < countDigArr.Length; i++)
-            {
-                countDigArr[i] = 0;
-            }
+            int[] countDigArr = InitCountArr();
             for (int rowIndex = 0; rowIndex < (int)Math.Sqrt(sudokuMatrix.GetLength(0)); rowIndex++)
             {
                 for (int colIndex = 0; colIndex < (int)Math.Sqrt(sudokuMatrix.GetLength(1)); colIndex++)

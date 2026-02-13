@@ -40,7 +40,7 @@ namespace Omega_Sudoku.Tests
         public void TestWithSubMatrixLengthNotSquareRoot()
         {
             var exception = Assert.Throws<Exception>(() => new SudokuManager().SolveForTests("300006006120204365005201460510002034"));
-            string expected = "The length of the sub matrices sides is not equal (NxN).";
+            string expected = "The size of the sub matrices is not a square root.";
             Assert.Equal(exception.Message, expected);
         }
 
