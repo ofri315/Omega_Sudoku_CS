@@ -127,7 +127,7 @@ namespace Omega_Sudoku
         {
             int numRow = this.rowsArr[row];
             int numCol = this.colsArr[col];
-            int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * 3 + ((int)(col / this.subMatrixSideLength))];
+            int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
             return ((numRow & (1 << (number - 1))) == 0) && ((numCol & (1 << (number - 1))) == 0) && ((numBlock & (1 << (number - 1))) == 0);
         }
 
@@ -166,7 +166,6 @@ namespace Omega_Sudoku
                         {
                             return (row, col);
                         }
-
 
                     }
                     

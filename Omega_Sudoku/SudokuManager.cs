@@ -23,17 +23,28 @@ namespace Omega_Sudoku
         {
             try
             {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+
                 SudokuInitialValidation InitialValidation = new SudokuInitialValidation(sudokuExpression);
                 InitialValidation.CheckAllInitialValidations();
 
                 ConvertSudoku convertor = new ConvertSudoku();
                 int[,] SudokuMatrix = convertor.ConvertStringToMatrix(sudokuExpression);
 
+                Console.WriteLine("Sudoku Before Solution:");
+                PrintSudoku.PrintSudokuMatrix(SudokuMatrix);
+
                 SudokuValidation Validation = new SudokuValidation(SudokuMatrix);
                 Validation.CheckRowsColsBlocks();
 
                 ISolver solver = new Solver(SudokuMatrix);
                 solver.Solve();
+                Console.WriteLine("Solved Sudoku:");
+                PrintSudoku.PrintSudokuMatrix(SudokuMatrix);
+
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+                Console.WriteLine(string.Format("solving time: {0}ms",elapsedMs));
 
                 return SudokuMatrix;
             }

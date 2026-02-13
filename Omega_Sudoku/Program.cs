@@ -21,28 +21,11 @@ namespace Omega_Sudoku
                 {
                     Console.WriteLine("Enter Sudoku Expression:");
                     string sudokuExpression = Console.ReadLine();
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    ConvertSudoku convertor = new ConvertSudoku();
-
-                    int[,] matrixBefore = new ConvertSudoku().ConvertStringToMatrix(sudokuExpression);
-                    Console.WriteLine("Sudoku Before Solution:");
-                    PrintSudoku.PrintSudokuMatrix(matrixBefore);
-
-                    int[,] matrixAfter = new SudokuManager().SolveSudoku(sudokuExpression);
-                    stopwatch.Stop();
-                    TimeSpan elapsedTime = stopwatch.Elapsed;
-                    TimeSpan elapsedTime1 = stopwatch.Elapsed;
-                    Console.WriteLine("Solved Sudoku:");
-                    PrintSudoku.PrintSudokuMatrix(matrixAfter);
-                    Console.WriteLine(elapsedTime1.TotalSeconds);
+                    new SudokuManager().SolveSudoku(sudokuExpression);
                 }
                 catch (Exception error)
                 {
-                    //Console.WriteLine(error.Message);
-                    throw new Exception(error.Message); 
+                    Console.WriteLine(error.Message);
                 }
 
             }
