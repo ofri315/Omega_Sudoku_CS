@@ -19,7 +19,7 @@ namespace Omega_Sudoku.Interfaces
         /// <summary>
         /// The function manages the sudoku solver functions.
         /// </summary>
-        /// <returns>True if there is a solution for the Sudoku puzzle.</returns>
+        /// <returns>True if there is a solution for the Sudoku puzzle. otherwise throws an exception.</returns>
         bool Solve();
 
 

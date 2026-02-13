@@ -11,7 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
     /// <summary>
-    /// The class handles the validation of the Sudoku board (checking for duplicates in the rows, columns, and submatrices).
+    /// The class handles the validation of the Sudoku board (checking for duplicates in the rows, columns, and submatrices). (inherits from IValidation interface).
     /// </summary>
     public class SudokuValidation: IValidation
     {

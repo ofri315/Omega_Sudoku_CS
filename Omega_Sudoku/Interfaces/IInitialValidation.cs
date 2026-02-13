@@ -17,7 +17,7 @@ namespace Omega_Sudoku.Interfaces
         string SudokuExspression { get; }
 
         /// <summary>
-        /// The function runs all the initial validation functions in the class.
+        /// The function checks that the Sudoku string input is valid.
         /// </summary>
         void CheckAllInitialValidations();
 

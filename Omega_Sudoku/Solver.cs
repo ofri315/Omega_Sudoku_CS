@@ -13,7 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Omega_Sudoku
 {
     /// <summary>
-    /// The class is responsible for finding a solution to the Sudoku puzzle.
+    /// The class is responsible for finding a solution to the Sudoku puzzle. (inherits from ISolver interface).
     /// </summary>
     public class Solver : ISolver
     {
@@ -117,7 +117,7 @@ namespace Omega_Sudoku
         }
 
         /// <summary>
-        /// The function counts how many zeros are there in a binary number. (which is the number possible options in a row/col/block).
+        /// The function counts how many zeros are there in a binary number. (which is the number of possible options in a row/col/block).
         /// </summary>
         /// <param name="number">a number to count how many zeros it has.</param>
         /// <returns>number of zeros.</returns>
@@ -138,7 +138,7 @@ namespace Omega_Sudoku
         /// <returns>row and column of the next cell.</returns>
         public (int,int) FindNext()
         {
-            int countZeroMin = -1;
+            int countOptionsMin = -1;
             int rowMin = -1;
             int colMin = -1;
             for (int row = 0; row < this.rowColBlocksize; row++)
@@ -151,19 +151,23 @@ namespace Omega_Sudoku
                         int numCol = this.colsArr[col];
                         int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
                         int numTot = numRow | numCol | numBlock;
-                        int countZero = CountZero(numTot);
+                        int countOptions = CountZero(numTot);
                         
-                        if (countZero< countZeroMin || countZeroMin == -1)
+                        if (countOptions < countOptionsMin || countOptionsMin == -1)
                         {
-                            countZeroMin = countZero;
+                            countOptionsMin = countOptions;
                             rowMin = row;
                             colMin = col;
                         }
-                        if (countZero == 1)
+                        if (countOptions == 1)
                         {
                             return (row, col);
                         }
                         if (CountZero(numRow) == 1 || CountZero(numCol) == 1 || CountZero(numBlock) == 1)
+                        {
+                            return (row, col);
+                        }
+                        if (countOptions == 0)
                         {
                             return (row, col);
                         }

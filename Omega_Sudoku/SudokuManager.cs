@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Omega_Sudoku
 {
     /// <summary>
-    /// The class is responsible for managing all functions for solving the Sudoku board.
+    /// The class is responsible for managing all functions for solving the Sudoku board.  (inherits from IManager interface).
     /// </summary>
     public class SudokuManager : IManager
     {
