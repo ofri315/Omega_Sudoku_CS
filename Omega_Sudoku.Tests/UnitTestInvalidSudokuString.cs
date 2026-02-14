@@ -7,7 +7,7 @@ namespace Omega_Sudoku.Tests
         public void TestWithEmptyString()
         {
             var exception = Assert.Throws<Exception>(() => new SudokuManager().SolveForTests(""));
-            string expected = "The Sudoku String is empty";
+            string expected = "The Sudoku String is empty.";
             Assert.Equal(exception.Message, expected);
         }
 

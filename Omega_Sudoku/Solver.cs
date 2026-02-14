@@ -120,8 +120,8 @@ namespace Omega_Sudoku
         /// The function counts how many zeros are there in a binary number. (which is the number of possible options in a row/col/block).
         /// </summary>
         /// <param name="number">a number to count how many zeros it has.</param>
-        /// <returns>number of zeros.</returns>
-        public int CountZero(int number)
+        /// <returns>number of zeros (which is the number of options).</returns>
+        public int CountOptions(int number)
         {
             int count = 0;
             while (number != 0)
@@ -151,7 +151,7 @@ namespace Omega_Sudoku
                         int numCol = this.colsArr[col];
                         int numBlock = this.blockArr[(int)(row / this.subMatrixSideLength) * this.subMatrixSideLength + ((int)(col / this.subMatrixSideLength))];
                         int numTot = numRow | numCol | numBlock;
-                        int countOptions = CountZero(numTot);
+                        int countOptions = CountOptions(numTot);
                         
                         if (countOptions < countOptionsMin || countOptionsMin == -1)
                         {
@@ -163,7 +163,7 @@ namespace Omega_Sudoku
                         {
                             return (row, col);
                         }
-                        if (CountZero(numRow) == 1 || CountZero(numCol) == 1 || CountZero(numBlock) == 1)
+                        if (CountOptions(numRow) == 1 || CountOptions(numCol) == 1 || CountOptions(numBlock) == 1)
                         {
                             return (row, col);
                         }
@@ -176,7 +176,7 @@ namespace Omega_Sudoku
             }
             return (rowMin, colMin); 
         }
-        
+
 
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace Omega_Sudoku
         public bool CheckEmptyString()
         {
             if (this.sudokuExpression == "")
-                throw new ArgumentException("The Sudoku String is empty");
+                throw new ArgumentException("The Sudoku String is empty.");
             else
                 return true;
         }
