@@ -26,7 +26,6 @@ namespace Omega_Sudoku
                 {
                     Console.WriteLine(error.Message);
                 }
-
             }
         }
         static void Main(string[] args)
